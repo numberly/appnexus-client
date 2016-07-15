@@ -89,17 +89,28 @@ using the find_one method :
 Filtering and sorting
 ---------------------
 
-You can filter using parameters of the methods find and find_one. The
-following loop prints all the registered French cities sorted by name :
+Sorting with appnexus-client is easy. just give a `sort` parameter with a value
+indicating which field is sorted in which order (`asc` or `desc`). This
+parameter will be supplied to the AppNexus API which will return a sorted
+response.
+
+You can filter entities using parameters of the methods find and find_one. Each
+parameter stand as a new filter for the field it is named after. For example,
+you can search for cities whose `country_code` field is equal to "FR" and sort
+them by name:
 
 .. code-block:: python
 
     for city in City.find(country_code="FR", sort="name.desc"):
         print(city["name"])
 
-Explanations and documentation for filtering and sorting can be found on the
-AppNexus-API's documentation, supplied at the beginning of this README.
+The parameters you give to the `find` and `find_one` methods are translated
+into query parameters for the requests being send. for example, the snippet
+`Creative.find(state="active", advertiser_id=[1, 2, 3])` will result in a get
+request on `http://api.appnexus.com/creative?state=active&advertiser_id=1,2,3`
 
+Please search in the documentation_ to understand the meaning of each
+parameter.
 
 --------------------------
 Custom Data Representation
