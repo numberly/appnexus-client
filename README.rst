@@ -116,21 +116,26 @@ parameter.
 Custom Data Representation
 --------------------------
 
-You can hook your own data representation class with this client. For this,
+You can hook your own data representation class with appnexus-client. For this,
 you must use a function that exposes this signature:
 
 .. code-block:: python
 
     function(client, service, object)
 
-The client is, of course, an AppNexusClient object. The service is a string
-containing the service to which the object belongs. And finally, the object is
+The client is, of course, an AppNexusClient instance. The service must be a string
+representing the service to which the object belongs. And finally, the object is
 a python dictionnary containing data about an AppNexus entity. The return
 value of this function will be used as a data representation.
 
 To use this function and get the desired data representation, you must pass it
-to the client through the `representation` keyword argument:
+to the client through the `representation` keyword argument.
+
+If you want to retrieve data as a list of tuples instead of a dict, you could
+do the following:
 
 .. code-block:: python
 
-    client = AppNexusClient("username", "password", representation=function)
+    def tuple_representation(client, service, object):
+        return object.items()
+    connect("username", "password", representation=tuple_representation)
