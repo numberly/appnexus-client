@@ -26,78 +26,19 @@ services
 
 A service is an endpoint on the AppNexus API, representing an entity such as a
 creative. Here is a complete list of services usable in this client:
-
- * AccountRecovery
- * AdProfile
- * Advertiser
- * AdQualityRule
- * AdServer
- * Brand
- * Broker
- * Browser
- * Campaign
- * Carrier
- * Category
- * City
- * ContentCategory
- * Country
- * Creative
- * CreativeFormat
- * Currency
- * CustomModel
- * CustomModelParser
- * Deal
- * DealBuyerAccess
- * DealFromPackage
- * DemographicArea
- * DeviceMake
- * DeviceModel
- * DomainAuditStatus
- * DomainList
- * ExternalInvCode
- * InsertionOrder
- * InventoryAttribute
- * InventoryResold
- * IpRangeService
- * Label
- * Language
- * LineItem
- * Lookup
- * NativeCustomKey
- * ManualOfferRanking
- * MediaSubtype
- * MediaType
- * Member
- * MobileApp
- * MobileAppInstance
- * MobileAppInstanceList
- * MobileAppStore
- * MemberProfile
- * ObjectLimit
- * OperatingSystem
- * OperatingSystemExtended
- * OperatingSystemFamily
- * OptimizationZone
- * Package
- * PackageBuyerAccess
- * PaymentRule
- * Pixel
- * Placement
- * PlateformMember
- * Profile
- * ProfileSummary
- * Publisher
- * Region
- * ReportStatus
- * Search
- * Segment
- * Site
- * TechnicalAttribute
- * Template
- * ThirdpartyPixel
- * User
- * UsergroupPattern
- * VisibilityProfile
+AccountRecovery, AdProfile, Advertiser, AdQualityRule, AdServer, Brand, Broker,
+Browser, Campaign, Carrier, Category, City, ContentCategory, Country, Creative,
+CreativeFormat, Currency, CustomModel, CustomModelParser, Deal,
+DealBuyerAccess, DealFromPackage, DemographicArea, DeviceMake, DeviceModel,
+DomainAuditStatus, DomainList, ExternalInvCode, InsertionOrder,
+InventoryAttribute, InventoryResold, IpRangeService, Label, Language, LineItem,
+Lookup, NativeCustomKey, ManualOfferRanking, MediaSubtype, MediaType, Member,
+MobileApp, MobileAppInstance, MobileAppInstanceList, MobileAppStore,
+MemberProfile, ObjectLimit, OperatingSystem, OperatingSystemExtended,
+OperatingSystemFamily, OptimizationZone, Package, PackageBuyerAccess,
+PaymentRule, Pixel, Placement, PlateformMember, Profile, ProfileSummary,
+Publisher, Region, ReportStatus, Search, Segment, Site, TechnicalAttribute,
+Template, ThirdpartyPixel, User, UsergroupPattern, VisibilityProfile
 
 ------
 Client
