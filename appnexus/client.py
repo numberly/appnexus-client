@@ -153,12 +153,15 @@ class AppNexusClient(object):
         args.update(kwargs)
         return Cursor(self, service, representation, **args)
 
-    def connect(self, username, password, debug=None, test=None):
+    def connect(self, username, password, debug=None, test=None,
+                representation=None):
         self.credentials = {"username": username, "password": password}
         if test is not None:
             self.test = test
         if debug is not None:
             self.debug = debug
+        if representation is not None:
+            self.representation = representation
 
     def _generate_services(self):
         for service in services_list:
