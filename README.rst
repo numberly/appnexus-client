@@ -65,20 +65,16 @@ Models
 A model in appnexus-client is an abstraction for a service. Most of them are
 already declared and you just have to import them.
 
-Models needs an access to an AppNexus Client to work, you can give it to them
-by either using the `connect` method or setting the client attribute to a
-valid client. Thus, the two following lines are equivalent :
+You can access the fields of an AppNexus entity the same way you'd do to access
+a dict's values : `entity["field_name"]`
+
+You can also iterate through all the cities of AppNexus-API easily. For
+example, to print the name of each and every city registered in AppNexus, you'd
+do :
 
 .. code-block:: python
 
-    Profile.connect("your-username", "super-secure-password")
-    Profile.client = AppNexusClient("your-username", "super-secure-password")
-
-You can iterate through all the cities of AppNexus-API easily. For example,
-to print the name of each and every city registered in AppNexus, you'd do :
-
-.. code-block:: python
-
+    from appnexus import City
     for city in City.find():
         print(city["name"])
 
