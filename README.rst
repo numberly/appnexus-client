@@ -40,26 +40,23 @@ PaymentRule, Pixel, Placement, PlateformMember, Profile, ProfileSummary,
 Publisher, Region, ReportStatus, Search, Segment, Site, TechnicalAttribute,
 Template, ThirdpartyPixel, User, UsergroupPattern, VisibilityProfile
 
-------
-Client
-------
+----------
+Connecting
+----------
 
-The AppNexus Client class is central to this package. It represents an access
-to the AppNexus API. To initialize one, you just have to give it your
-credentials :
+You need to be connected to the AppNexus to use it. You should have a username
+and password to do so.
 
-.. code-block:: python
-
-    from appnexus import AppNexusClient
-    client = AppNexusClient("your-username", "super-secure-password")
-
-You can then use it to retrieve or send data from and to the AppNexus API :
+There is a really simple way to connect to your AppNexus account and start
+using appnexus-client to get and modify your data. It's as simple as calling a
+`connect` method with your credentials! See by yourself:
 
 .. code-block:: python
 
-    creative = client.creative.find_one(id=1337)
-    creative["media_url"] = "http://test.com/"
-    client.creative.modify(creative, id=1337)
+    from appnexus import connect
+    connect("my-username", "my-password")
+
+And from here, you can use all the features of the library.
 
 ------
 Models
