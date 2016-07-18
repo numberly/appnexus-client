@@ -114,4 +114,11 @@ class Cursor(object):
         self._skip = number
         return self
 
+    def size(self):
+        """Return the number of elements of the cursor with skip and limit"""
+        initial_count = self.count()
+        count_with_skip = max(0, initial_count - self._skip)
+        size = min(count_with_skip, self._limit)
+        return size
+
 __all__ = ["Cursor"]
