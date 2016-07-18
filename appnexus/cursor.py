@@ -25,6 +25,7 @@ class Cursor(object):
         self.specs = specs
 
         self.retrieved = 0
+        self._skip = 0
         self._limit = float('inf')
 
     def __len__(self):
@@ -41,6 +42,12 @@ class Cursor(object):
         """Iterate over all AppNexus objects matching the specifications"""
         for page in self.iter_pages():
             data = self.extract_data(page)
+            if self._skip >= len(data):
+                self._skip -= len(data)
+                continue
+            elif self._skip:
+                self._skip = 0
+                data = data[self._skip:]
             lasting = self._limit - self.retrieved
             if not lasting:
                 break
@@ -100,6 +107,11 @@ class Cursor(object):
     def limit(self, number):
         """Limit the cursor to retrieve at most `number` elements"""
         self._limit = number
+        return self
+
+    def skip(self, number):
+        """Skip the first `number` elements of the cursor"""
+        self._skip = number
         return self
 
 __all__ = ["Cursor"]
