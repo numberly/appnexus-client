@@ -24,6 +24,8 @@ class Cursor(object):
         self.representation = representation
         self.specs = specs
 
+        self.retrieved = 0
+
     def __len__(self):
         """Returns the number of elements matching the specifications"""
         return self.count()
@@ -39,6 +41,7 @@ class Cursor(object):
         for page in self.iter_pages():
             data = self.extract_data(page)
             for entity in data:
+                self.retrieved += 1
                 yield entity
 
     def extract_data(self, page):
