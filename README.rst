@@ -123,10 +123,10 @@ you must use a function that exposes this signature:
 
     function(client, service, object)
 
-The client is, of course, an AppNexusClient instance. The service must be a string
-representing the service to which the object belongs. And finally, the object is
-a python dictionnary containing data about an AppNexus entity. The return
-value of this function will be used as a data representation.
+The client is, of course, an AppNexusClient instance. The service must be a
+string representing the service to which the object belongs. And finally, the
+object is a python dictionnary containing data about an AppNexus entity. The
+return value of this function will be used as a data representation.
 
 To use this function and get the desired data representation, you must pass it
 to the client through the `representation` keyword argument.
