@@ -89,7 +89,7 @@ using the find_one method :
 Filtering and sorting
 ---------------------
 
-Sorting with appnexus-client is easy. just give a `sort` parameter with a value
+Sorting with appnexus-client is easy. Just give a `sort` parameter with a value
 indicating which field is sorted in which order (`asc` or `desc`). This
 parameter will be supplied to the AppNexus API which will return a sorted
 response.
@@ -105,7 +105,7 @@ them by name:
         print(city["name"])
 
 The parameters you give to the `find` and `find_one` methods are translated
-into query parameters for the requests being send. for example, the snippet
+into query parameters for the requests being send. For example, the snippet
 `Creative.find(state="active", advertiser_id=[1, 2, 3])` will result in a get
 request on `http://api.appnexus.com/creative?state=active&advertiser_id=1,2,3`
 
