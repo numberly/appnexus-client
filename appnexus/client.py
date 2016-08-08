@@ -209,10 +209,10 @@ class Service(object):
         return self.client.get(self.service, **kwargs)
 
     def modify(self, json, **kwargs):
-        return self.client.modify(self.service, json, **kwargs)
+        return self.client.modify(self.service, {self.service: json}, **kwargs)
 
     def create(self, json, **kwargs):
-        return self.client.create(self.service, json, **kwargs)
+        return self.client.create(self.service, {self.service: json}, **kwargs)
 
 client = AppNexusClient()
 
