@@ -11,7 +11,7 @@ def read(fname):
 
 setup(
     name="appnexus-client",
-    version="0.1",
+    version="0.1.2",
     author="Numberly",
     description="appnexus-client is a python wrapper for the Appnexus API",
     long_description=read("README.rst"),
