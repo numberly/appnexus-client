@@ -61,7 +61,8 @@ class Cursor(object):
         """Extract the first AppNexus object present in the response"""
         page = self.get_page(num_elements=1)
         data = self.extract_data(page)
-        return data[0]
+        if data:
+            return data[0]
 
     def get_page(self, start_element=0, num_elements=None):
         """Get a page (100 elements) starting from `start_element`"""
