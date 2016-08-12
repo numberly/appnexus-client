@@ -3,8 +3,16 @@ All notable changes to this project will be documented in this file
 This project adheres to [Semantic Versioning](http://semver.org/)
 
 ## [Unreleased]
+The relesead version is actually up to date
+
+## [0.2.0]
 ### Added
  - Add the possibility to delete AppNexus entities
+ 
+### Fixed
+ - Fixed missing import in setup.py
+ - Even strangely named envelope are now handled automatically through the
+   models
 
 ## [0.1.3] - 2016-08-12
 ### Removed
@@ -21,5 +29,7 @@ This project adheres to [Semantic Versioning](http://semver.org/)
  - Fixed an IndexError occuring when getting first element of an empty cursor
 
 
-[Unreleased]: https://github.com/numberly/appnexus-client/compare/0.1.2...HEAD
+[Unreleased]: https://github.com/numberly/appnexus-client/compare/0.2.0...HEAD
+[0.2.0]: https://github.com/numberly/appnexus-client/compare/0.1.3...0.2.0
+[0.1.3]: https://github.com/numberly/appnexus-client/compare/0.1.2...0.1.3
 [0.1.2]: https://github.com/numberly/appnexus-client/compare/04af0c9a447c235bb8ba2512f710ac905c5d0c48...0.1.2
