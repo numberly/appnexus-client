@@ -6,6 +6,11 @@ This project adheres to [Semantic Versioning](http://semver.org/)
 ### Changed
  - Major improvements in the README
 
+### Added
+ - Add the `limit` method to cursor
+ - Add the `skip` method to cursor
+ - Add the `size` method to cursor
+
 ## [0.2.0]
 ### Added
  - Add the possibility to delete AppNexus entities
