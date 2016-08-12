@@ -24,6 +24,10 @@ class Cursor(object):
         self.representation = representation
         self.specs = specs
 
+        self.retrieved = 0
+        self._skip = 0
+        self._limit = float('inf')
+
     def __len__(self):
         """Returns the number of elements matching the specifications"""
         return self.count()
@@ -38,7 +42,19 @@ class Cursor(object):
         """Iterate over all AppNexus objects matching the specifications"""
         for page in self.iter_pages():
             data = self.extract_data(page)
+            if self._skip >= len(data):
+                self._skip -= len(data)
+                continue
+            elif self._skip:
+                self._skip = 0
+                data = data[self._skip:]
+            lasting = self._limit - self.retrieved
+            if not lasting:
+                break
+            elif lasting < len(data):
+                data = data[:lasting]
             for entity in data:
+                self.retrieved += 1
                 yield entity
 
     def extract_data(self, page):
@@ -87,5 +103,22 @@ class Cursor(object):
     def clone(self):
         return Cursor(self.client, self.service, self.representation,
                       **self.specs)
+
+    def limit(self, number):
+        """Limit the cursor to retrieve at most `number` elements"""
+        self._limit = number
+        return self
+
+    def skip(self, number):
+        """Skip the first `number` elements of the cursor"""
+        self._skip = number
+        return self
+
+    def size(self):
+        """Return the number of elements of the cursor with skip and limit"""
+        initial_count = self.count()
+        count_with_skip = max(0, initial_count - self._skip)
+        size = min(count_with_skip, self._limit)
+        return size
 
 __all__ = ["Cursor"]
