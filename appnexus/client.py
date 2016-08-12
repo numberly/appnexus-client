@@ -139,6 +139,10 @@ class AppNexusClient(object):
         """create a new AppNexus object"""
         return self._send(requests.post, service, json, **kwargs)
 
+    def delete(self, service, *ids):
+        """delete an AppNexus object"""
+        return self._send(requests.delete, service, id=ids)
+
     def append(self, service, json, **kwargs):
         kwargs.update({"append": True})
         return self.modify(service, json, **kwargs)
@@ -213,6 +217,10 @@ class Service(object):
 
     def create(self, json, **kwargs):
         return self.client.create(self.service, json, **kwargs)
+
+    def delete(self, *args):
+        return self.client.delete(self.service, *args)
+
 
 client = AppNexusClient()
 

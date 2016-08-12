@@ -3,7 +3,8 @@ All notable changes to this project will be documented in this file
 This project adheres to [Semantic Versioning](http://semver.org/)
 
 ## [Unreleased]
- - There is no unreleased changes yet
+### Added
+ - Add the possibility to delete AppNexus entities
 
 ## [0.1.3] - 2016-08-12
 ### Removed

@@ -20,6 +20,8 @@ class Model(object):
         self.attrs.update(attrs)
         self.last_saved_attrs = self.attrs.copy()
 
+        self.delete = self._delete_instance
+
     def __getitem__(self, name):
         if name in self.attrs:
             return self.attrs[name]
@@ -106,6 +108,13 @@ class Model(object):
     def create(cls, payload, **kwargs):
         payload = {cls.service: payload}
         return cls.client.create(cls.service, payload, **kwargs)
+
+    @classmethod
+    def delete(cls, *args):
+        return cls.client.delete(cls.service, *args)
+
+    def _delete_instance(self):
+        return self.client.delete(self.service, self["id"])
 
     @classmethod
     def modify(cls, payload, **kwargs):
