@@ -11,7 +11,7 @@ This project adheres to [Semantic Versioning](http://semver.org/)
  - Add the `skip` method to cursor
  - Add the `size` method to cursor
 
-## [0.2.0]
+## [0.2.0] - 2016-08-12
 ### Added
  - Add the possibility to delete AppNexus entities
  
