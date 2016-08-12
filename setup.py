@@ -22,6 +22,7 @@ setup(
     name="appnexus-client",
     version=get_version(),
     author="Numberly",
+    author_email="alexandrebonnetain@1000mercis.com",
     description="appnexus-client is a python wrapper for the Appnexus API",
     long_description=read("README.rst"),
     url="https://github.com/numberly/appnexus-client",
