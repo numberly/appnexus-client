@@ -40,26 +40,23 @@ PaymentRule, Pixel, Placement, PlateformMember, Profile, ProfileSummary,
 Publisher, Region, ReportStatus, Search, Segment, Site, TechnicalAttribute,
 Template, ThirdpartyPixel, User, UsergroupPattern, VisibilityProfile
 
-------
-Client
-------
+----------
+Connecting
+----------
 
-The AppNexus Client class is central to this package. It represents an access
-to the AppNexus API. To initialize one, you just have to give it your
-credentials :
+You need to be connected to the AppNexus to use it. You should have a username
+and password to do so.
 
-.. code-block:: python
-
-    from appnexus import AppNexusClient
-    client = AppNexusClient("your-username", "super-secure-password")
-
-You can then use it to retrieve or send data from and to the AppNexus API :
+There is a really simple way to connect to your AppNexus account and start
+using appnexus-client to get and modify your data. It's as simple as calling a
+`connect` method with your credentials! See by yourself:
 
 .. code-block:: python
 
-    creative = client.creative.find_one(id=1337)
-    creative["media_url"] = "http://test.com/"
-    client.creative.modify(creative, id=1337)
+    from appnexus import connect
+    connect("my-username", "my-password")
+
+And from here, you can use all the features of the library.
 
 ------
 Models
@@ -68,20 +65,16 @@ Models
 A model in appnexus-client is an abstraction for a service. Most of them are
 already declared and you just have to import them.
 
-Models needs an access to an AppNexus Client to work, you can give it to them
-by either using the `connect` method or setting the client attribute to a
-valid client. Thus, the two following lines are equivalent :
+You can access the fields of an AppNexus entity the same way you'd do to access
+a dict's values : `entity["field_name"]`
+
+You can also iterate through all the cities of AppNexus-API easily. For
+example, to print the name of each and every city registered in AppNexus, you'd
+do :
 
 .. code-block:: python
 
-    Profile.connect("your-username", "super-secure-password")
-    Profile.client = AppNexusClient("your-username", "super-secure-password")
-
-You can iterate through all the cities of AppNexus-API easily. For example,
-to print the name of each and every city registered in AppNexus, you'd do :
-
-.. code-block:: python
-
+    from appnexus import City
     for city in City.find():
         print(city["name"])
 
@@ -96,37 +89,53 @@ using the find_one method :
 Filtering and sorting
 ---------------------
 
-You can filter using parameters of the methods find and find_one. The
-following loop prints all the registered French cities sorted by name :
+Sorting with appnexus-client is easy. Just give a `sort` parameter with a value
+indicating which field is sorted in which order (`asc` or `desc`). This
+parameter will be supplied to the AppNexus API which will return a sorted
+response.
+
+You can filter entities using parameters of the methods find and find_one. Each
+parameter stand as a new filter for the field it is named after. For example,
+you can search for cities whose `country_code` field is equal to "FR" and sort
+them by name:
 
 .. code-block:: python
 
     for city in City.find(country_code="FR", sort="name.desc"):
         print(city["name"])
 
-Explanations and documentation for filtering and sorting can be found on the
-AppNexus-API's documentation, supplied at the beginning of this README.
+The parameters you give to the `find` and `find_one` methods are translated
+into query parameters for the requests being send. For example, the snippet
+`Creative.find(state="active", advertiser_id=[1, 2, 3])` will result in a get
+request on `http://api.appnexus.com/creative?state=active&advertiser_id=1,2,3`
 
+Please search in the documentation_ to understand the meaning of each
+parameter.
 
 --------------------------
 Custom Data Representation
 --------------------------
 
-You can hook your own data representation class with this client. For this,
+You can hook your own data representation class with appnexus-client. For this,
 you must use a function that exposes this signature:
 
 .. code-block:: python
 
     function(client, service, object)
 
-The client is, of course, an AppNexusClient object. The service is a string
-containing the service to which the object belongs. And finally, the object is
-a python dictionnary containing data about an AppNexus entity. The return
-value of this function will be used as a data representation.
+The client is, of course, an AppNexusClient instance. The service must be a
+string representing the service to which the object belongs. And finally, the
+object is a python dictionnary containing data about an AppNexus entity. The
+return value of this function will be used as a data representation.
 
 To use this function and get the desired data representation, you must pass it
-to the client through the `representation` keyword argument:
+to the client through the `representation` keyword argument.
+
+If you want to retrieve data as a list of tuples instead of a dict, you could
+do the following:
 
 .. code-block:: python
 
-    client = AppNexusClient("username", "password", representation=function)
+    def tuple_representation(client, service, object):
+        return object.items()
+    connect("username", "password", representation=tuple_representation)
