@@ -85,6 +85,10 @@ class Model(object):
         return cls.client.meta(cls.service)
 
     @classproperty
+    def envelope(cls):
+        return cls.service
+
+    @classproperty
     def service(cls):
         if cls._service is None:
             cls._service = normalize_service_name(cls.__name__)
@@ -95,7 +99,7 @@ class Model(object):
         diff = self._generate_diff()
         if not diff and "id" in self:
             return
-        payload = {self.service: diff}
+        payload = {self.envelope: diff}
         if "id" not in self:
             result = self.client.create(self.service, payload, **kwargs)
         else:
@@ -106,7 +110,7 @@ class Model(object):
 
     @classmethod
     def create(cls, payload, **kwargs):
-        payload = {cls.service: payload}
+        payload = {cls.envelope: payload}
         return cls.client.create(cls.service, payload, **kwargs)
 
     @classmethod
@@ -118,7 +122,7 @@ class Model(object):
 
     @classmethod
     def modify(cls, payload, **kwargs):
-        payload = {cls.service: payload}
+        payload = {cls.envelope: payload}
         return cls.client.modify(cls.service, payload, **kwargs)
 
     @classmethod
