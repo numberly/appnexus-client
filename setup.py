@@ -3,15 +3,24 @@ appnexus-client
 """
 
 import os
+import subprocess
 from setuptools import find_packages, setup
 
 
 def read(fname):
     return open(os.path.join(os.path.dirname(__file__), fname)).read()
 
+
+def get_version():
+    if not os.path.isdir(".git"):
+        sys.stderr.write("This does not appear to be a Git repository.")
+        return ""
+    return subprocess.check_output(["git", "describe", "--tags", "--always"],
+                                   universal_newlines=True)[:-1]
+
 setup(
     name="appnexus-client",
-    version="0.1.2",
+    version=get_version(),
     author="Numberly",
     description="appnexus-client is a python wrapper for the Appnexus API",
     long_description=read("README.rst"),
