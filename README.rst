@@ -1,3 +1,5 @@
+.. image:: https://img.shields.io/pypi/v/appnexus-client.svg?maxAge=3600
+
 ===============
 AppNexus-client
 ===============
