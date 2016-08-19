@@ -42,24 +42,6 @@ PaymentRule, Pixel, Placement, PlateformMember, Profile, ProfileSummary,
 Publisher, Region, ReportStatus, Search, Segment, Site, TechnicalAttribute,
 Template, ThirdpartyPixel, User, UsergroupPattern, VisibilityProfile
 
-----------
-Connecting
-----------
-
-You need to be connected to the AppNexus to use it. You should have a username
-and password to do so.
-
-There is a really simple way to connect to your AppNexus account and start
-using appnexus-client to get and modify your data. It's as simple as calling a
-`connect` method with your credentials! See by yourself:
-
-.. code-block:: python
-
-    from appnexus import connect
-    connect("my-username", "my-password")
-
-And from here, you can use all the features of the library.
-
 ------
 Models
 ------
