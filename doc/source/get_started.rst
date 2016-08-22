@@ -53,7 +53,22 @@ Within python, you can access these services with any ``AppNexusClient`` instanc
 Retrieval by id
 ===============
 
-You can use the ``find_one`` method on any service.
+You can use the ``find_one`` method on any service to find one element matching
+you query. for example, if you want to gather more informations on a ``City``
+which id is ``18384``, you can issue the request as follow :
+
+.. code-block:: python
+
+    from appnexus import connect, client
+    connect("my-username", "my-password")
+    city = client.city.find_one(id=18384)
+
+In this snippet, ``client.city`` refers to the `city service`_, while the
+``find_one`` method is used to retrieve the first entry matching your filters,
+which you give as arguments. ``id=18384`` is the only filter in this request.
+It should in this case retrieve only one element, which will be returned to
+you.
+
 
 .. _`API documentation`: https://wiki.appnexus.com/display/api/Home
 .. _services: https://wiki.appnexus.com/display/api/API+Services
@@ -61,3 +76,4 @@ You can use the ``find_one`` method on any service.
 .. _creatives: https://wiki.appnexus.com/display/api/Creative+Service
 .. _profiles: https://wiki.appnexus.com/display/api/Profile+Service
 .. _`Domain Lists`: https://wiki.appnexus.com/display/api/Domain+List+Service
+.. _`city service`: https://wiki.appnexus.com/display/api/City+Service
