@@ -69,6 +69,21 @@ which you give as arguments. ``id=18384`` is the only filter in this request.
 It should in this case retrieve only one element, which will be returned to
 you.
 
+================================
+Retrieval by filtering any field
+================================
+
+When you want to retrieve multiple entries matching your query, you should use
+the ``find`` method of services. It's almost the same method as ``find_one``
+excepts that it returns a ``Cursor`` object.
+
+In short, cursors_ are objects representing the result set of a query. The data
+are fetched from the remote servers only as they are needed.
+
+Of course, appnexus-client's cursors are implemented as iterable, which mean
+you can retrieve a list by simply wrapping the ``find`` call in a ``list``
+call.
+
 
 .. _`API documentation`: https://wiki.appnexus.com/display/api/Home
 .. _services: https://wiki.appnexus.com/display/api/API+Services
