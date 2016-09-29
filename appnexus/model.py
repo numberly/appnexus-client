@@ -1,5 +1,6 @@
 # -*- coding:utf-8-*-
 
+from copy import deepcopy
 import re
 
 from appnexus.utils import classproperty, normalize_service_name
@@ -18,7 +19,7 @@ class Model(object):
         if dict_attr is not None:
             self.attrs.update(dict_attr)
         self.attrs.update(attrs)
-        self.last_saved_attrs = self.attrs.copy()
+        self.last_saved_attrs = deepcopy(self.attrs)
 
         self.delete = self._delete_instance
 
