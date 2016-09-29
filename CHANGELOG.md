@@ -2,9 +2,12 @@
 All notable changes to this project will be documented in this file
 This project adheres to [Semantic Versioning](http://semver.org/)
 
-## [Unreleased]
+## [0.2.2] - 2016-09-29
 ### Added
  - Add a Pypi version badge to the README
+
+### Fixed
+ - Saving an entity after having modified a nested field is now working
 
 ## [0.2.1] - 2016-08-12
 ### Changed
@@ -39,7 +42,8 @@ This project adheres to [Semantic Versioning](http://semver.org/)
  - Fixed an IndexError occuring when getting first element of an empty cursor
 
 
-[Unreleased]: https://github.com/numberly/appnexus-client/compare/0.2.1...HEAD
+[Unreleased]: https://github.com/numberly/appnexus-client/compare/0.2.2...HEAD
+[0.2.2]: https://github.com/numberly/appnexus-client/compare/0.2.1...0.2.2
 [0.2.1]: https://github.com/numberly/appnexus-client/compare/0.2.0...0.2.1
 [0.2.0]: https://github.com/numberly/appnexus-client/compare/0.1.3...0.2.0
 [0.1.3]: https://github.com/numberly/appnexus-client/compare/0.1.2...0.1.3
