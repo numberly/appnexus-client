@@ -22,9 +22,9 @@ class AppNexusClient(object):
                  representation=representations.raw):
         self.credentials = {"username": username, "password": password}
         self.token = None
-        self.debug = debug
+        self.debug = bool(debug)
         self.representation = representation
-        self.test = test
+        self.test = bool(test)
 
         self._generate_services()
 
@@ -161,9 +161,9 @@ class AppNexusClient(object):
                 representation=None):
         self.credentials = {"username": username, "password": password}
         if test is not None:
-            self.test = test
+            self.test = bool(test)
         if debug is not None:
-            self.debug = debug
+            self.debug = bool(debug)
         if representation is not None:
             self.representation = representation
 
