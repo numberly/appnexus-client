@@ -2,6 +2,10 @@
 All notable changes to this project will be documented in this file
 This project adheres to [Semantic Versioning](http://semver.org/)
 
+## [Unreleased]
+### Added
+ - Add the BatchSegment service
+
 ## [0.2.2] - 2016-09-29
 ### Added
  - Add a Pypi version badge to the README

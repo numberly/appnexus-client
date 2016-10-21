@@ -176,10 +176,11 @@ class AppNexusClient(object):
 
 
 services_list = ["AccountRecovery", "AdProfile", "Advertiser",
-                 "AdQualityRule", "AdServer", "Brand", "Broker", "Browser",
-                 "Campaign", "Carrier", "Category", "City", "ContentCategory",
-                 "Country", "Creative", "CreativeFormat", "Currency",
-                 "CustomModel", "CustomModelParser", "Deal", "DealBuyerAccess", 
+                 "AdQualityRule", "AdServer", "BatchSegment", "Brand",
+                 "Broker", "Browser", "Campaign", "Carrier", "Category",
+                 "City", "ContentCategory", "Country", "Creative",
+                 "CreativeFormat", "Currency", "CustomModel",
+                 "CustomModelParser", "Deal", "DealBuyerAccess", 
                  "DealFromPackage", "DemographicArea", "DeviceMake",
                  "DeviceModel", "DomainAuditStatus", "DomainList",
                  "ExternalInvCode", "InsertionOrder", "InventoryAttribute",
