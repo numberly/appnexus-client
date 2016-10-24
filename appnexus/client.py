@@ -1,6 +1,7 @@
 # -*- coding:utf-8-*-
 
 import time
+from configparser import ConfigParser
 
 import requests
 
@@ -167,6 +168,12 @@ class AppNexusClient(object):
         if representation is not None:
             self.representation = representation
 
+    def connect_from_file(filename):
+        config = ConfigParser()
+        config.read(filename)
+        connect_data = dict(config["appnexus"])
+        connect(**connect_data)
+
     def _generate_services(self):
         for service in services_list:
             normalized_name = normalize_service_name(service)
@@ -228,6 +235,10 @@ client = AppNexusClient()
 
 def connect(username, password, debug=None, test=None):
     return client.connect(username, password, debug, test)
+
+
+def connect_from_file(filename):
+    return client.connect_from_file(filename)
 
 
 def find(service, arguments=None, representation=None, **kwargs):

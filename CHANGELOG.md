@@ -5,6 +5,7 @@ This project adheres to [Semantic Versioning](http://semver.org/)
 ## [Unreleased]
 ### Added
  - Add the BatchSegment service
+ - Implement a new connection method `connect_from_file`
 
 ## [0.2.2] - 2016-09-29
 ### Added
