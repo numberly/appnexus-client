@@ -2,7 +2,7 @@
 All notable changes to this project will be documented in this file
 This project adheres to [Semantic Versioning](http://semver.org/)
 
-## [Unreleased]
+## [o.2.3] - 2016-11-16
 ### Added
  - Add the BatchSegment service
  - Implement a new connection method `connect_from_file`
@@ -47,7 +47,8 @@ This project adheres to [Semantic Versioning](http://semver.org/)
  - Fixed an IndexError occuring when getting first element of an empty cursor
 
 
-[Unreleased]: https://github.com/numberly/appnexus-client/compare/0.2.2...HEAD
+[Unreleased]: https://github.com/numberly/appnexus-client/compare/0.2.3...HEAD
+[0.2.3]: https://github.com/numberly/appnexus-client/compare/0.2.2...0.2.3
 [0.2.2]: https://github.com/numberly/appnexus-client/compare/0.2.1...0.2.2
 [0.2.1]: https://github.com/numberly/appnexus-client/compare/0.2.0...0.2.1
 [0.2.0]: https://github.com/numberly/appnexus-client/compare/0.1.3...0.2.0
