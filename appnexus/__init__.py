@@ -1,4 +1,4 @@
-from .client import AppNexusClient, client, connect, find
+from .client import AppNexusClient, client, connect, find, connect_from_file
 from .model import *
 
 __all__ = ["AppNexusClient", "Model", "client", "connect", "find",

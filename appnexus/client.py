@@ -168,7 +168,7 @@ class AppNexusClient(object):
         if representation is not None:
             self.representation = representation
 
-    def connect_from_file(filename):
+    def connect_from_file(self, filename):
         config = ConfigParser()
         config.read(filename)
         connect_data = dict(config["appnexus"])
