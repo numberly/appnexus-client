@@ -2,6 +2,10 @@
 All notable changes to this project will be documented in this file
 This project adheres to [Semantic Versioning](http://semver.org/)
 
+## [Unreleased]
+### Added
+ - Add an option to load token from a file
+
 ## [0.2.4] - 2016-11-28
 ### Fixed
  - Fix `connect_from_file` method

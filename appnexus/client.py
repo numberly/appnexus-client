@@ -1,6 +1,7 @@
 # -*- coding:utf-8-*-
 
 import time
+import os
 from configparser import ConfigParser
 
 import requests
@@ -23,6 +24,7 @@ class AppNexusClient(object):
                  representation=representations.raw):
         self.credentials = {"username": username, "password": password}
         self.token = None
+        self.token_file = None
         self.debug = bool(debug)
         self.representation = representation
         self.test = bool(test)
@@ -113,6 +115,7 @@ class AppNexusClient(object):
         if "error_code" in data or "error_id" in data:
             raise AppNexusException(response)
         self.token = data["token"]
+        self.save_token()
         return self.token
 
     def check_errors(self, response, data):
@@ -159,7 +162,7 @@ class AppNexusClient(object):
         return Cursor(self, service, representation, **args)
 
     def connect(self, username, password, debug=None, test=None,
-                representation=None):
+                representation=None, token_file=None):
         self.credentials = {"username": username, "password": password}
         if test is not None:
             self.test = bool(test)
@@ -167,6 +170,9 @@ class AppNexusClient(object):
             self.debug = bool(debug)
         if representation is not None:
             self.representation = representation
+        if token_file is not None:
+            self.token_file = token_file
+            self.load_token()
 
     def connect_from_file(self, filename):
         config = ConfigParser()
@@ -181,6 +187,19 @@ class AppNexusClient(object):
             generated_service = Service(self, normalized_name)
             setattr(self, snake_name, generated_service)
 
+    def save_token(self):
+        if not self.token_file or not self.token:
+            return
+        with open(self.token_file, mode='w') as fp:
+            fp.write(self.token)
+
+    def load_token(self):
+        if not self.token_file:
+            return
+        if not os.path.exists(self.token_file):
+            return
+        with open(self.token_file) as fp:
+            self.token = fp.read()
 
 services_list = ["AccountRecovery", "AdProfile", "Advertiser",
                  "AdQualityRule", "AdServer", "BatchSegment", "Brand",
