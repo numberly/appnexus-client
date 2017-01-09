@@ -206,7 +206,7 @@ services_list = ["AccountRecovery", "AdProfile", "Advertiser",
                  "Broker", "Browser", "Campaign", "Carrier", "Category",
                  "City", "ContentCategory", "Country", "Creative",
                  "CreativeFormat", "Currency", "CustomModel",
-                 "CustomModelParser", "Deal", "DealBuyerAccess", 
+                 "CustomModelParser", "Deal", "DealBuyerAccess",
                  "DealFromPackage", "DemographicArea", "DeviceMake",
                  "DeviceModel", "DomainAuditStatus", "DomainList",
                  "ExternalInvCode", "InsertionOrder", "InventoryAttribute",
@@ -253,6 +253,7 @@ client = AppNexusClient()
 
 
 def connect(username, password, debug=None, test=None, token_file=None):
+
     return client.connect(username, password, debug, test, token_file)
 
 
