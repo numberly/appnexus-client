@@ -199,7 +199,7 @@ class AppNexusClient(object):
         if not os.path.exists(self.token_file):
             return
         with open(self.token_file) as fp:
-            self.token = fp.read()
+            self.token = fp.read().strip()
 
 services_list = ["AccountRecovery", "AdProfile", "Advertiser",
                  "AdQualityRule", "AdServer", "BatchSegment", "Brand",
