@@ -178,7 +178,7 @@ class AppNexusClient(object):
         config = ConfigParser()
         config.read(filename)
         connect_data = dict(config["appnexus"])
-        connect(**connect_data)
+        self.connect(**connect_data)
 
     def _generate_services(self):
         for service in services_list:
