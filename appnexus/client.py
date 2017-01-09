@@ -252,8 +252,8 @@ class Service(object):
 client = AppNexusClient()
 
 
-def connect(username, password, debug=None, test=None):
-    return client.connect(username, password, debug, test)
+def connect(username, password, debug=None, test=None, token_file=None):
+    return client.connect(username, password, debug, test, token_file)
 
 
 def connect_from_file(filename):
