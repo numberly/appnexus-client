@@ -24,10 +24,11 @@ class AppNexusClient(object):
     error_ids = {"NOAUTH": NoAuth}
 
     def __init__(self, username=None, password=None, debug=False, test=False,
-                 representation=representations.raw):
+                 representation=representations.raw, token_file=None):
         self.credentials = {"username": username, "password": password}
         self.token = None
         self.token_file = None
+        self.load_token(token_file)
         self.debug = bool(debug)
         self.representation = representation
         self.test = bool(test)
@@ -174,8 +175,7 @@ class AppNexusClient(object):
         if representation is not None:
             self.representation = representation
         if token_file is not None:
-            self.token_file = token_file
-            self.load_token()
+            self.load_token(token_file)
 
     def connect_from_file(self, filename):
         config = ConfigParser()
@@ -196,9 +196,11 @@ class AppNexusClient(object):
         with open(self.token_file, mode='w') as fp:
             fp.write(self.token)
 
-    def load_token(self):
+    def load_token(self, token_file=None):
         if not self.token_file:
-            return
+            if not token_file:
+                return
+            self.token_file = token_file
         if not os.path.exists(self.token_file):
             return
         with open(self.token_file) as fp:
