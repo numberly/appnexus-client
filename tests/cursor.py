@@ -6,7 +6,7 @@ from appnexus import representations
 from appnexus.client import AppNexusClient
 from appnexus.cursor import Cursor
 
-from tests.helpers import gen_random_collection
+from .helpers import gen_random_collection
 
 
 @pytest.fixture

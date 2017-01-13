@@ -2,7 +2,10 @@
 
 import time
 import os
-from configparser import ConfigParser
+try:
+    from configparser import ConfigParser
+except ImportError:
+    from ConfigParser import ConfigParser
 
 import requests
 
