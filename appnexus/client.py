@@ -223,10 +223,10 @@ services_list = ["AccountRecovery", "AdProfile", "Advertiser",
                  "OperatingSystem", "OperatingSystemExtended",
                  "OperatingSystemFamily", "OptimizationZone", "Package",
                  "PackageBuyerAccess", "PaymentRule", "Pixel", "Placement",
-                 "PlateformMember", "Profile", "ProfileSummary", "Publisher",
-                 "Region", "ReportStatus", "Search", "Segment", "Site",
-                 "TechnicalAttribute", "Template", "ThirdpartyPixel", "User",
-                 "UsergroupPattern", "VisibilityProfile"]
+                 "PlateformMember", "PostalCode", "Profile", "ProfileSummary",
+                 "Publisher", "Region", "ReportStatus", "Search", "Segment",
+                 "Site", "TechnicalAttribute", "Template", "ThirdpartyPixel",
+                 "User", "UsergroupPattern", "VisibilityProfile"]
 
 
 class Service(object):
