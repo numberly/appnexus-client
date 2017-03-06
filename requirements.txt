@@ -1,4 +1,4 @@
 requests
-pytest
+pytest==3.0.6
 pytest-cov
 pytest-mock
