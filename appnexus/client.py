@@ -11,7 +11,7 @@ from appnexus.utils import normalize_service_name
 
 try:
     from configparser import ConfigParser
-except ImportError:
+except ImportError:  # pragma: nocover
     from ConfigParser import ConfigParser
 
 
