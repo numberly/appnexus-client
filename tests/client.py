@@ -189,6 +189,22 @@ def test_create_send_json(mocker, connected_client):
     assert "json" in kwargs and kwargs["json"] == data
 
 
+def test_delete_return_dict(mocker, connected_client):
+    mocker.patch("requests.delete")
+    requests.delete().json.return_value = {"response": {"campaign": {}}}
+    cursor = connected_client.delete("campaign", 42)
+    assert isinstance(cursor, dict)
+
+
+def test_delete_send_ids(mocker, connected_client):
+    mocker.patch.object(requests, "delete")
+    mocker.patch.object(connected_client, "_prepare_uri")
+    ids = [1, 2, 3]
+    connected_client.delete("campaign", *ids)
+    args, parameters = connected_client._prepare_uri.call_args
+    assert "id" in parameters and list(parameters["id"]) == ids
+
+
 def test_append_return_dict(mocker, connected_client):
     mocker.patch("requests.put")
     requests.put().json.return_value = {"response": {"campaign": {}}}
