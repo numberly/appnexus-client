@@ -42,10 +42,6 @@ class AppNexusClient(object):
         :param kwargs: query parameters
         :return: The uri of the request
         """
-        if self.test:
-            base_url = self.test_url
-        else:
-            base_url = self.url
         for key, value in parameters.items():
             if isinstance(value, (list, tuple)):
                 parameters[key] = ",".join([str(member) for member in value])
@@ -54,9 +50,9 @@ class AppNexusClient(object):
                                     for key, value in parameters.items()]
         query_parameters = "&".join(list_formated_parameters)
         if query_parameters:
-            uri = "{}{}?{}".format(base_url, service, query_parameters)
+            uri = "{}{}?{}".format(self.base_url, service, query_parameters)
         else:
-            uri = "{}{}".format(base_url, service)
+            uri = "{}{}".format(self.base_url, service)
         return uri
 
     # shiro: Coverage is disabled for this function because it's mocked and it
@@ -204,6 +200,13 @@ class AppNexusClient(object):
             return
         with open(self.token_file) as fp:
             self.token = fp.read().strip()
+
+    @property
+    def base_url(self):
+        if self.test:
+            return self.test_url
+        else:
+            return self.url
 
 
 services_list = ["AccountRecovery", "AdProfile", "Advertiser", "AdQualityRule",
