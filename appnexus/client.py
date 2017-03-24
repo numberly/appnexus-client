@@ -98,7 +98,7 @@ class AppNexusClient(object):
         if self.debug:  # pragma: no cover
             print('updating token')
         if None in self.credentials.values():
-            raise RuntimeError("Invalid Credentials")
+            raise RuntimeError("You must provide an username and a password")
         credentials = dict(auth=self.credentials)
         url = self.test_url if self.test else self.url
         response = requests.post(url + "auth",
