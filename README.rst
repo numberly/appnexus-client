@@ -22,6 +22,10 @@ dictionnaries.
 Getting Started
 ===============
 
+You can install it with this command::
+
+    $ pip install appnexus-client
+
 --------
 services
 --------
