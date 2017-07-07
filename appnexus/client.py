@@ -223,7 +223,7 @@ services_list = ["AccountRecovery", "AdProfile", "Advertiser",
                  "OperatingSystem", "OperatingSystemExtended",
                  "OperatingSystemFamily", "OptimizationZone", "Package",
                  "PackageBuyerAccess", "PaymentRule", "Pixel", "Placement",
-                 "PlateformMember", "PostalCode", "Profile", "ProfileSummary",
+                 "PlatformMember", "PostalCode", "Profile", "ProfileSummary",
                  "Publisher", "Region", "ReportStatus", "Search", "Segment",
                  "Site", "TechnicalAttribute", "Template", "ThirdpartyPixel",
                  "User", "UsergroupPattern", "VisibilityProfile"]
