@@ -42,7 +42,7 @@ Lookup, NativeCustomKey, ManualOfferRanking, MediaSubtype, MediaType, Member,
 MobileApp, MobileAppInstance, MobileAppInstanceList, MobileAppStore,
 MemberProfile, ObjectLimit, OperatingSystem, OperatingSystemExtended,
 OperatingSystemFamily, OptimizationZone, Package, PackageBuyerAccess,
-PaymentRule, Pixel, Placement, PlateformMember, Profile, ProfileSummary,
+PaymentRule, Pixel, Placement, PlatformMember, Profile, ProfileSummary,
 Publisher, Region, ReportStatus, Search, Segment, Site, TechnicalAttribute,
 Template, ThirdpartyPixel, User, UsergroupPattern, VisibilityProfile
 
