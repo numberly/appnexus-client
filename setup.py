@@ -1,15 +1,7 @@
-"""
-appnexus-client
-"""
-
 import os
 import subprocess
 import sys
-from setuptools import find_packages, setup
-
-
-def read(fname):
-    return open(os.path.join(os.path.dirname(__file__), fname)).read()
+from setuptools import setup
 
 
 def get_version():
@@ -19,27 +11,31 @@ def get_version():
     return subprocess.check_output(["git", "describe", "--tags", "--always"],
                                    universal_newlines=True)[:-1]
 
+
+def get_description():
+    with open("README.rst") as file:
+        return file.read()
+
+
 setup(
-    name="appnexus-client",
+    name="AppNexus-client",
     version=get_version(),
-    author="Numberly",
-    author_email="alexandrebonnetain@1000mercis.com",
-    description="appnexus-client is a python wrapper for the Appnexus API",
-    long_description=read("README.rst"),
+    license="MIT",
+    author="numberly",
+    author_email="alexandre.bonnetain@1000mercis.com",
+    description="General purpose Python client for the AppNexus API",
+    long_description=get_description(),
     url="https://github.com/numberly/appnexus-client",
     download_url="https://github.com/numberly/appnexus-client/tags",
     platforms="any",
-    packages=find_packages(),
-    install_requires=[
-        "requests"
-    ],
+    packages=["appnexus"],
+    install_requires=["requests"],
     classifiers=[
-        "Operating System :: POSIX :: Linux",
+        "Intended Audience :: Developers",
+        "Operating System :: OS Independent",
         "Programming Language :: Python",
-        "Programming Language :: Python :: 2.6",
         "Programming Language :: Python :: 2.7",
         "Programming Language :: Python :: 3",
-        "Programming Language :: Python :: 3.2",
         "Programming Language :: Python :: 3.3",
         "Programming Language :: Python :: 3.4",
         "Programming Language :: Python :: 3.5",
