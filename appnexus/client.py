@@ -1,19 +1,18 @@
-# -*- coding:utf-8-*-
-
 import time
 import os
-try:
-    from configparser import ConfigParser
-except ImportError:
-    from ConfigParser import ConfigParser
 
 import requests
 
 from appnexus import representations
 from appnexus.cursor import Cursor
-from appnexus.exceptions import (AppNexusException, RateExceeded, NoAuth,
-                                 BadCredentials)
+from appnexus.exceptions import (AppNexusException, BadCredentials,
+                                 NoAuth, RateExceeded)
 from appnexus.utils import normalize_service_name
+
+try:
+    from configparser import ConfigParser
+except ImportError:
+    from ConfigParser import ConfigParser
 
 
 class AppNexusClient(object):
@@ -123,7 +122,7 @@ class AppNexusClient(object):
         return self.token
 
     def check_errors(self, response, data):
-        """check for errors and raise an appropriate error if needed"""
+        """Check for errors and raise an appropriate error if needed"""
         if "error_id" in data:
             error_id = data["error_id"]
             if error_id in self.error_ids:
@@ -136,19 +135,19 @@ class AppNexusClient(object):
             raise AppNexusException(response)
 
     def get(self, service, **kwargs):
-        """retrieve data from AppNexus API"""
+        """Retrieve data from AppNexus API"""
         return self._send(requests.get, service, **kwargs)
 
     def modify(self, service, json, **kwargs):
-        """modify an AppNexus object"""
+        """Modify an AppNexus object"""
         return self._send(requests.put, service, json, **kwargs)
 
     def create(self, service, json, **kwargs):
-        """create a new AppNexus object"""
+        """Create a new AppNexus object"""
         return self._send(requests.post, service, json, **kwargs)
 
     def delete(self, service, *ids):
-        """delete an AppNexus object"""
+        """Delete an AppNexus object"""
         return self._send(requests.delete, service, id=ids)
 
     def append(self, service, json, **kwargs):
@@ -206,27 +205,27 @@ class AppNexusClient(object):
         with open(self.token_file) as fp:
             self.token = fp.read().strip()
 
-services_list = ["AccountRecovery", "AdProfile", "Advertiser",
-                 "AdQualityRule", "AdServer", "BatchSegment", "Brand",
-                 "Broker", "Browser", "Campaign", "Carrier", "Category",
-                 "City", "ContentCategory", "Country", "Creative",
-                 "CreativeFormat", "Currency", "CustomModel",
-                 "CustomModelParser", "Deal", "DealBuyerAccess",
+
+services_list = ["AccountRecovery", "AdProfile", "Advertiser", "AdQualityRule",
+                 "AdServer", "BatchSegment", "Brand", "Broker", "Browser",
+                 "Campaign", "Carrier", "Category", "City", "ContentCategory",
+                 "Country", "Creative", "CreativeFormat", "Currency",
+                 "CustomModel", "CustomModelParser", "Deal", "DealBuyerAccess",
                  "DealFromPackage", "DemographicArea", "DeviceMake",
                  "DeviceModel", "DomainAuditStatus", "DomainList",
                  "ExternalInvCode", "InsertionOrder", "InventoryAttribute",
                  "InventoryResold", "IpRangeService", "Label", "Language",
                  "LineItem", "Lookup", "NativeCustomKey", "ManualOfferRanking",
                  "MediaSubtype", "MediaType", "Member", "MobileApp",
-                 "MobileAppInstance", "MobileAppInstanceList",
-                 "MobileAppStore", "MemberProfile", "ObjectLimit",
-                 "OperatingSystem", "OperatingSystemExtended",
-                 "OperatingSystemFamily", "OptimizationZone", "Package",
-                 "PackageBuyerAccess", "PaymentRule", "Pixel", "Placement",
-                 "PlatformMember", "PostalCode", "Profile", "ProfileSummary",
-                 "Publisher", "Region", "ReportStatus", "Search", "Segment",
-                 "Site", "TechnicalAttribute", "Template", "ThirdpartyPixel",
-                 "User", "UsergroupPattern", "VisibilityProfile"]
+                 "MemberProfile", "ObjectLimit", "OperatingSystem",
+                 "MobileAppInstance", "MobileAppInstanceList", "MobileAppStore",
+                 "OperatingSystemExtended", "OperatingSystemFamily",
+                 "OptimizationZone", "Package", "PackageBuyerAccess",
+                 "PaymentRule", "Pixel", "Placement", "PlatformMember",
+                 "PostalCode", "Profile", "ProfileSummary", "Publisher",
+                 "Region", "ReportStatus", "Search", "Segment", "Site",
+                 "TechnicalAttribute", "Template", "ThirdpartyPixel", "User",
+                 "UsergroupPattern", "VisibilityProfile"]
 
 
 class Service(object):
@@ -258,7 +257,6 @@ client = AppNexusClient()
 
 
 def connect(username, password, debug=None, test=None, token_file=None):
-
     return client.connect(username, password, debug, test, token_file)
 
 
@@ -268,5 +266,6 @@ def connect_from_file(filename):
 
 def find(service, arguments=None, representation=None, **kwargs):
     return client.find(service, arguments, representation, **kwargs)
+
 
 __all__ = ["AppNexusClient", "client", "connect", "find"]
