@@ -69,27 +69,20 @@ def test_connect_exception(mocker, client):
         client.update_token()
 
 
-def test_base_url():
-    assert (AppNexusClient(None, None, test=False).base_url ==
-            AppNexusClient.url)
-    assert (AppNexusClient(None, None, test=True).base_url ==
-            AppNexusClient.test_url)
-
-
 def test_uri_service(client):
-    assert client._prepare_uri("service") == client.base_url + "service"
+    assert client._prepare_uri("service") == client.url + "service"
 
 
 def test_uri_query_parameters(client):
     uri = client._prepare_uri("service", id=42, the="game")
-    expected_uris = [client.base_url + "service?id=42&the=game",
-                     client.base_url + "service?the=game&id=42"]
+    expected_uris = [client.url + "service?id=42&the=game",
+                     client.url + "service?the=game&id=42"]
     assert uri in expected_uris
 
 
 def test_uri_list_parameter(client):
     uri = client._prepare_uri("service", id=[1, 2, 3])
-    expected_uri = client.base_url + "service?id=1,2,3"
+    expected_uri = client.url + "service?id=1,2,3"
     assert uri == expected_uri
 
 
