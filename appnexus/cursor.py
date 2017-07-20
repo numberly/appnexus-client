@@ -65,12 +65,10 @@ class Cursor(object):
         for possible_data_key in uncommon_keys:
             element = page[possible_data_key]
             if isinstance(element, dict):
-                return [self.representation(self.client, self.service,
-                                            element)]
+                return [self.representation(self.client, self.service, element)]
             if isinstance(element, list):
-                return list(map(lambda x: self.representation(self.client,
-                                                              self.service, x),
-                                element))
+                return [self.representation(self.client, self.service, x)
+                        for x in element]
 
     @property
     def first(self):
@@ -120,5 +118,6 @@ class Cursor(object):
         count_with_skip = max(0, initial_count - self._skip)
         size = min(count_with_skip, self._limit)
         return size
+
 
 __all__ = ["Cursor"]

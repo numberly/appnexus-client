@@ -1,5 +1,3 @@
-# -*- coding:utf-8-*-
-
 from copy import deepcopy
 import re
 
@@ -9,7 +7,6 @@ from appnexus.client import client, services_list, AppNexusClient
 
 class Model(object):
     """Generic model for AppNexus data"""
-
     _service = None
     client = client
     service_name_re = re.compile("([A-Z][a-z]*)")
@@ -20,7 +17,6 @@ class Model(object):
             self.attrs.update(dict_attr)
         self.attrs.update(attrs)
         self.last_saved_attrs = deepcopy(self.attrs)
-
         self.delete = self._delete_instance
 
     def __getitem__(self, name):
@@ -151,6 +147,7 @@ def gen_services(services_list):
     for service in services_list:
         model = type(service, (Model,), {})
         globals().setdefault(service, model)
+
 
 gen_services(services_list)
 

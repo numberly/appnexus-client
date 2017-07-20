@@ -5,8 +5,7 @@ import pytest
 import requests
 
 from appnexus.client import AppNexusClient
-from appnexus.cursor import Cursor
-from appnexus.exceptions import (BadCredentials, NoAuth, AppNexusException)
+from appnexus.exceptions import AppNexusException, BadCredentials, NoAuth
 
 
 @pytest.fixture

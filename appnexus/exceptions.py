@@ -1,6 +1,3 @@
-# -*- coding:utf-8-*-
-
-
 class AppNexusException(Exception):
     """Represents a generic AppNexus Exception"""
 
@@ -13,8 +10,7 @@ class AppNexusException(Exception):
         data = self.response.json()["response"]
         error_name = data["error_code"] or data["error_id"]
         description_error = data.get("error", "(indisponible)")
-        return "{}: {}".format(error_name,
-                               description_error)
+        return "{}: {}".format(error_name, description_error)
 
 
 class RateExceeded(AppNexusException):
@@ -28,9 +24,10 @@ class NoAuth(AppNexusException):
 
 
 class BadCredentials(AppNexusException):
-    """Excpetion raised when wrong credentials are provided"""
+    """Exception raised when wrong credentials are provided"""
 
     def __str__(self):
         return "You provided bad credentials for the AppNexus API"
+
 
 __all__ = ["AppNexusException", "RateExceeded", "NoAuth", "BadCredentials"]
