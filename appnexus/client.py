@@ -158,8 +158,8 @@ class AppNexusClient(object):
         args.update(kwargs)
         return Cursor(self, service, representation, **args)
 
-    def connect(self, username, password, test=None,
-                representation=None, token_file=None):
+    def connect(self, username, password, test=None, representation=None,
+                token_file=None):
         self.credentials = {"username": username, "password": password}
         if test is not None:
             self.test = bool(test)
@@ -255,8 +255,8 @@ class Service(object):
 client = AppNexusClient()
 
 
-def connect(username, password, debug=None, test=None, token_file=None):
-    return client.connect(username, password, debug, test, token_file)
+def connect(username, password, test=None, token_file=None):
+    return client.connect(username, password, test, token_file)
 
 
 def connect_from_file(filename):
