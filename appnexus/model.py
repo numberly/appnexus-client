@@ -1,8 +1,11 @@
 from copy import deepcopy
+import logging
 import re
 
 from appnexus.utils import classproperty, normalize_service_name
 from appnexus.client import client, services_list, AppNexusClient
+
+logger = logging.getLogger("appnexus-client")
 
 
 class Model(object):
@@ -98,6 +101,7 @@ class Model(object):
             return
         payload = {self.envelope: diff}
         if "id" not in self:
+            logger.info("creating a {}".format(self.service))
             result = self.client.create(self.service, payload, **kwargs)
         else:
             result = self.client.modify(self.service, payload, id=self["id"],
