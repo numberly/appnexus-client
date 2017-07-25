@@ -1,6 +1,7 @@
-from copy import deepcopy
 import logging
 import re
+
+from thingy import Thingy
 
 from appnexus.utils import classproperty, normalize_service_name
 from appnexus.client import client, services_list, AppNexusClient
@@ -8,59 +9,11 @@ from appnexus.client import client, services_list, AppNexusClient
 logger = logging.getLogger("appnexus-client")
 
 
-class Model(object):
+class Model(Thingy):
     """Generic model for AppNexus data"""
     _service = None
     client = client
     service_name_re = re.compile("([A-Z][a-z]*)")
-
-    def __init__(self, dict_attr=None, **attrs):
-        self.attrs = dict()
-        if dict_attr is not None:
-            self.attrs.update(dict_attr)
-        self.attrs.update(attrs)
-        self.last_saved_attrs = deepcopy(self.attrs)
-        self.delete = self._delete_instance
-
-    def __getitem__(self, name):
-        if name in self.attrs:
-            return self.attrs[name]
-        raise AttributeError
-
-    def __setitem__(self, name, value):
-        self.attrs[name] = value
-
-    def __delitem__(self, name):
-        if name in self.attrs:
-            del self.attrs[name]
-
-    def get(self, name, default=None):
-        return self.attrs.get(name, default)
-
-    def __str__(self):
-        if "id" in self:
-            return "<{} #{}>".format(self.service, self["id"])
-        return "<{} not saved>".format(self.service)
-
-    __repr__ = __str__
-
-    def __contains__(self, name):
-        return name in self.attrs
-
-    def _generate_diff(self):
-        diff = dict()
-        for key, value in self.attrs.items():
-            if (key not in self.last_saved_attrs or
-                    self.last_saved_attrs[key] != value):
-                diff[key] = value
-
-        old_keys = set(self.last_saved_attrs)
-        new_keys = set(self.attrs)
-        only_old_keys = old_keys.difference(new_keys)
-        for key in only_old_keys:
-            diff[key] = None
-
-        return diff
 
     @classmethod
     def connect(cls, username, password):
@@ -94,21 +47,6 @@ class Model(object):
             cls._service = normalize_service_name(cls.__name__)
         return cls._service
 
-    def save(self, **kwargs):
-        """Save the stored object on appnexus"""
-        diff = self._generate_diff()
-        if not diff and "id" in self:
-            return
-        payload = {self.envelope: diff}
-        if "id" not in self:
-            logger.info("creating a {}".format(self.service))
-            result = self.client.create(self.service, payload, **kwargs)
-        else:
-            result = self.client.modify(self.service, payload, id=self["id"],
-                                        **kwargs)
-        self.last_saved_attrs = self.attrs.copy()
-        return result
-
     @classmethod
     def create(cls, payload, **kwargs):
         payload = {cls.envelope: payload}
@@ -117,9 +55,6 @@ class Model(object):
     @classmethod
     def delete(cls, *args):
         return cls.client.delete(cls.service, *args)
-
-    def _delete_instance(self):
-        return self.client.delete(self.service, self["id"])
 
     @classmethod
     def modify(cls, payload, **kwargs):
@@ -132,12 +67,21 @@ class Model(object):
         cls._service = service
         return cls(obj)
 
+    def save(self, **kwargs):
+        payload = self.__dict__
+        if "id" not in self.__dict__:
+            logger.info("creating a {}".format(self.service))
+            result = self.create(payload, **kwargs)
+        else:
+            result = self.modify(payload, id=self.id, **kwargs)
+        return result
+
 
 class Campaign(Model):
 
     @property
     def profile(self):
-        return Profile.find_one(id=self["profile_id"])
+        return Profile.find_one(id=self.profile_id)
 
 
 class CustomModel(Model):

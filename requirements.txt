@@ -1,4 +1,6 @@
 requests==2.18.1
+Thingy==0.8.2
+
 pytest==3.0.7
 pytest-cov==2.4.0
 pytest-mock==1.6.2

@@ -17,4 +17,4 @@ def test_campaign_profile(campaign, mocker):
     mocker.patch.object(Profile, "find_one")
     campaign.profile
     args, kwargs = Profile.find_one.call_args
-    assert "id" in kwargs and kwargs["id"] == campaign["profile_id"]
+    assert "id" in kwargs and kwargs["id"] == campaign.profile_id
