@@ -105,10 +105,10 @@ class AppNexusClient(object):
                                  json=credentials)
         data = response.json()["response"]
         if "error_id" in data and data["error_id"] == "NOAUTH":
-                raise BadCredentials()
+            raise BadCredentials()
         if "error_code" in data and data["error_code"] == "RATE_EXCEEDED":
-                time.sleep(150)
-                return
+            time.sleep(150)
+            return
         if "error_code" in data or "error_id" in data:
             raise AppNexusException(response)
         self.token = data["token"]
