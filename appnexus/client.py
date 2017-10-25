@@ -20,8 +20,8 @@ logger = logging.getLogger("appnexus-client")
 
 class AppNexusClient(object):
     """Represents an active connection to the AppNexus API"""
-    url = "http://api.appnexus.com/"
-    test_url = "http://api-test.appnexus.com/"
+    url = "https://api.appnexus.com/"
+    test_url = "https://api-test.appnexus.com/"
     error_codes = {"RATE_EXCEEDED": RateExceeded}
     error_ids = {"NOAUTH": NoAuth}
 
