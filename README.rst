@@ -52,7 +52,7 @@ creative. Here is the complete list of services usable with AppNexus-client:
 ``Deal``, ``DealBuyerAccess``, ``DealFromPackage``, ``DemographicArea``,
 ``DeviceMake``, ``DeviceModel``, ``DomainAuditStatus``, ``DomainList``,
 ``ExternalInvCode``, ``InsertionOrder``, ``InventoryAttribute``,
-``InventoryResold``, ``IpRangeService``, ``Label``, ``Language``, ``LineItem``,
+``InventoryResold``, ``IpRangeList``, ``Label``, ``Language``, ``LineItem``,
 ``Lookup``, ``ManualOfferRanking``, ``MediaSubtype``, ``MediaType``, ``Member``,
 ``MemberProfile``, ``MobileApp``, ``MobileAppInstance``,
 ``MobileAppInstanceList``, ``MobileAppStore``, ``NativeCustomKey``,
