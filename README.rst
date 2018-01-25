@@ -1,4 +1,5 @@
 .. _documentation: https://wiki.appnexus.com/display/api/Home
+.. _Thingy: https://github.com/numberly/thingy
 
 ===============
 AppNexus-client
@@ -86,8 +87,8 @@ Models
 A model in AppNexus-client is an abstraction for a service. Most of them are
 already declared and you just have to import them.
 
-You can access the fields of an AppNexus just like a dict:
-``entity["field_name"]``
+You can access the fields of an AppNexus just like any object:
+``entity.field_name``
 
 For example, to print the name of each and every city registered in AppNexus,
 you could do:
@@ -97,7 +98,7 @@ you could do:
     from appnexus import City
 
     for city in City.find():
-        print(city["name"])
+        print(city.name)
 
 You can also retrieve a single result (the first one returned by the API) using
 the ``find_one`` method:
@@ -123,7 +124,7 @@ equal to "FR" and sort them by name:
 .. code-block:: python
 
     for city in City.find(country_code="FR", sort="name.desc"):
-        print(city["name"])
+        print(city.name)
 
 The parameters you give to the ``find`` and ``find_one`` methods are translated
 into query parameters for the requests being send. For example, the snippet
@@ -137,8 +138,10 @@ each parameter.
 Custom data representation
 --------------------------
 
-You can hook your own data representation class with AppNexus-client. For this,
-you must use a function that exposes this signature:
+By default, AppNexus-client relies on Thingy_ to represent data as objects.
+
+But you can also hook your own data representation class. For this, you must
+use a function that exposes this signature:
 
 .. code-block:: python
 
@@ -152,15 +155,15 @@ this function will be used as the data representation.
 To use this function and get the desired data representation, you must pass it
 to the client as the ``representation`` keyword argument.
 
-For example, if you would want your data to be in the form of list of tuples
-instead rather than dictionaries, you could do the following:
+For example, if you would want your data to be in the form of simple
+dictionaries you would do the following:
 
 .. code-block:: python
 
-    def tuple_representation(client, service, object):
-        return object.items()
+    def dict_representation(client, service, object):
+        return object.view()
 
-    connect("username", "password", representation=tuple_representation)
+    connect("username", "password", representation=dict_representation)
 
 
 Tests

@@ -37,12 +37,12 @@ def response2():
 
 def test_model_init_by_dict():
     x = Campaign({"id": 42})
-    assert x["id"] == 42
+    assert x.id == 42
 
 
 def test_model_init_by_kwargs():
     x = Campaign(id=42)
-    assert x["id"] == 42
+    assert x.id == 42
 
 
 def test_model_can_have_class_and_instance_client():
@@ -79,26 +79,15 @@ def test_model_save_missing_id(mocker):
 def test_model_save_with_id(mocker):
     mocker.patch.object(Campaign.client, 'modify')
     x = Campaign(id=42)
-    x["attr"] = True
+    x.attr = True
     x.save()
     assert Campaign.client.modify.called
-
-
-def test_model_save_without_change(mocker):
-    mocker.patch.object(Campaign.client, 'modify')
-    Campaign(id=42).save()
-    assert not Campaign.client.modify.called
 
 
 def test_meta_call_client_meta(mocker):
     mocker.patch.object(Campaign.client, 'meta')
     Campaign.meta()
     assert Campaign.client.meta.called
-
-
-def test_missing_item():
-    with pytest.raises(AttributeError):
-        Campaign()["missing"]
 
 
 def test_guess_service_name():
@@ -115,53 +104,22 @@ def test_guess_composed_service_name():
 
 def test_setitem():
     x = Campaign(field=1)
-    x["field"] = 42
-    assert x["field"] == 42
-    x["new_field"] = 23
-    assert x["new_field"] == 23
+    x.field = 42
+    assert x.field == 42
+    x.new_field = 23
+    assert x.new_field == 23
 
 
 def test_string_representation():
     x = Campaign(id=21)
     assert "21" in str(x)
-    assert x.service in str(x)
-    y = Campaign()
-    assert "not saved" in str(y)
-    assert x.service in str(y)
+    assert x.service in str(x).lower()
 
 
 def test_service_can_override():
     class Test(Model):
         _service = "notatest"
     assert Test.service == "notatest"
-
-
-def test_contains():
-    x = Campaign(field=42)
-    assert "field" in x
-    assert "other_field" not in x
-
-
-def test_delitem():
-    x = Campaign(field=42)
-    del x["field"]
-    assert "field" not in x
-
-
-def test_get_present():
-    x = Campaign(field=42)
-    assert x.get("field") == 42
-
-
-def test_get_not_present():
-    x = Campaign(field=42)
-    assert x.get("field2") is None
-
-
-def test_diff_with_deletion():
-    x = Campaign(field=42)
-    del x["field"]
-    assert x._generate_diff() == {"field": None}
 
 
 def test_connect():
