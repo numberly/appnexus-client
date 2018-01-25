@@ -78,7 +78,7 @@ class AppNexusClient(object):
         while not valid_response:
             headers = dict(Authorization=self.token)
             uri = self._prepare_uri(service, **kwargs)
-            logger.debug('\n'.join(map(str, (headers, uri, data))))
+            logger.debug(' '.join(map(str, (headers, uri, data))))
 
             response = send_method(uri, headers=headers, json=data)
             response_data = response.json()
