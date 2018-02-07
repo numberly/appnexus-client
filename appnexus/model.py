@@ -3,8 +3,8 @@ import re
 
 from thingy import Thingy
 
+from appnexus.client import AppNexusClient, client, services_list
 from appnexus.utils import classproperty, normalize_service_name
-from appnexus.client import client, services_list, AppNexusClient
 
 logger = logging.getLogger("appnexus-client")
 
@@ -53,8 +53,8 @@ class Model(Thingy):
         return cls.client.create(cls.service, payload, **kwargs)
 
     @classmethod
-    def delete(cls, *args):
-        return cls.client.delete(cls.service, *args)
+    def delete(cls, *args, **kwargs):
+        return cls.client.delete(cls.service, *args, **kwargs)
 
     @classmethod
     def modify(cls, payload, **kwargs):
