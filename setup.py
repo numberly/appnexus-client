@@ -30,7 +30,7 @@ setup(
     platforms="any",
     packages=["appnexus"],
     install_requires=["requests",
-                      "Thingy>=0.8.2"],
+                      "Thingy>=0.8.3"],
     classifiers=[
         "Intended Audience :: Developers",
         "Operating System :: OS Independent",
