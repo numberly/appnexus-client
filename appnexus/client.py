@@ -44,14 +44,16 @@ class AppNexusClient(object):
         :param kwargs: query parameters
         :return: The uri of the request
         """
+        query_parameters = []
         for key, value in parameters.items():
             if isinstance(value, (list, tuple)):
-                parameters[key] = ",".join([str(member) for member in value])
+                value = ",".join([str(member) for member in value])
+            if isinstance(value, bool):
+                value = "true" if value else "false"
+            query_parameters.append("{}={}".format(key, value))
 
-        list_formated_parameters = ["{}={}".format(key, value)
-                                    for key, value in parameters.items()]
-        query_parameters = "&".join(list_formated_parameters)
         if query_parameters:
+            query_parameters = "&".join(query_parameters)
             uri = "{}{}?{}".format(self.base_url, service, query_parameters)
         else:
             uri = "{}{}".format(self.base_url, service)
