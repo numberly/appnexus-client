@@ -61,9 +61,10 @@ class AppNexusClient(object):
 
     # shiro: Coverage is disabled for this function because it's mocked and it
     # doesn't need testing (for the moment) since it's a simple instruction
-    def _handle_rate_exceeded(self):  # pragma: no cover
+    def _handle_rate_exceeded(self, response):  # pragma: no cover
         """Handles rate exceeded errors"""
-        time.sleep(10)
+        waiting_time = int(response.headers.get("Retry-After", 10))
+        time.sleep(waiting_time)
 
     def _send(self, send_method, service, data=None, **kwargs):
         """Send a request to the AppNexus API (used for internal routing)
@@ -87,7 +88,7 @@ class AppNexusClient(object):
             try:
                 self.check_errors(response, response_data["response"])
             except RateExceeded:
-                self._handle_rate_exceeded()
+                self._handle_rate_exceeded(response)
             except NoAuth:
                 self.update_token()
             else:
