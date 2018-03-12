@@ -1,6 +1,7 @@
 import logging
 import time
 import os
+from json import JSONDecodeError
 
 import requests
 
@@ -84,15 +85,22 @@ class AppNexusClient(object):
             logger.debug(' '.join(map(str, (headers, uri, data))))
 
             response = send_method(uri, headers=headers, json=data)
-            response_data = response.json()
             try:
-                self.check_errors(response, response_data["response"])
-            except RateExceeded:
-                self._handle_rate_exceeded(response)
-            except NoAuth:
-                self.update_token()
-            else:
+                response_data = response.json()
+            except JSONDecodeError:
+                # Must be a CSV or some other form of data, which is not JSON
                 valid_response = True
+                if response.status_code >= 200:
+                    return response.content
+            else:
+                try:
+                    self.check_errors(response, response_data["response"])
+                except RateExceeded:
+                    self._handle_rate_exceeded(response)
+                except NoAuth:
+                    self.update_token()
+                else:
+                    valid_response = True
         if raw:
             return response_data
         return response_data["response"]
@@ -227,7 +235,7 @@ services_list = ["AccountRecovery", "AdProfile", "Advertiser", "AdQualityRule",
                  "PostalCode", "Profile", "ProfileSummary", "Publisher",
                  "Region", "ReportStatus", "Search", "Segment", "Site",
                  "TechnicalAttribute", "Template", "ThirdpartyPixel", "User",
-                 "UsergroupPattern", "VisibilityProfile"]
+                 "UsergroupPattern", "VisibilityProfile", "Report", "ReportDownload"]
 
 
 class Service(object):
