@@ -1,7 +1,6 @@
 import logging
 import time
 import os
-from json import JSONDecodeError
 
 import requests
 
@@ -87,7 +86,7 @@ class AppNexusClient(object):
             response = send_method(uri, headers=headers, json=data)
             try:
                 response_data = response.json()
-            except JSONDecodeError:
+            except ValueError:
                 # Must be a CSV or some other form of data, which is not JSON
                 valid_response = True
                 if response.status_code >= 200:
