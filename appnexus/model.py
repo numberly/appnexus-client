@@ -84,13 +84,6 @@ class Campaign(Model):
         return Profile.find_one(id=self.profile_id)
 
 
-class CustomModel(Model):
-
-    @classproperty
-    def envelope(cls):
-        return cls.service.replace('-', '_')
-
-
 def gen_services(services_list):
     for service in services_list:
         model = type(service, (Model,), {})
