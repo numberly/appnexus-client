@@ -26,10 +26,6 @@ class Model(Thingy):
                                **kwargs)
 
     @classmethod
-    def get(cls, **kwargs):
-        return cls.client.get(cls.service, **kwargs)
-
-    @classmethod
     def find_one(cls, **kwargs):
         return cls.find(**kwargs).first
 
@@ -86,6 +82,13 @@ class Campaign(Model):
     @property
     def profile(self):
         return Profile.find_one(id=self.profile_id)
+
+
+class Report(Model):
+
+    @classmethod
+    def download(cls, **kwargs):
+        return cls.client.get("report-download", **kwargs)
 
 
 class CustomModel(Model):

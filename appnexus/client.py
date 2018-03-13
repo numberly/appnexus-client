@@ -233,7 +233,7 @@ services_list = ["AccountRecovery", "AdProfile", "Advertiser", "AdQualityRule",
                  "PostalCode", "Profile", "ProfileSummary", "Publisher",
                  "Region", "ReportStatus", "Search", "Segment", "Site",
                  "TechnicalAttribute", "Template", "ThirdpartyPixel", "User",
-                 "UsergroupPattern", "VisibilityProfile", "Report", "ReportDownload"]
+                 "UsergroupPattern", "VisibilityProfile", "Report"]
 
 
 class Service(object):
