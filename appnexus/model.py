@@ -84,12 +84,12 @@ class Campaign(Model):
         return Profile.find_one(id=self.profile_id)
 
 
-def gen_services(services_list):
+def create_models(services_list):
     for service in services_list:
         model = type(service, (Model,), {})
         globals().setdefault(service, model)
 
 
-gen_services(services_list)
+create_models(services_list)
 
 __all__ = ["Model", "services_list"] + services_list
