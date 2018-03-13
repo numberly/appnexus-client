@@ -91,19 +91,12 @@ class Report(Model):
         return cls.client.get("report-download", **kwargs)
 
 
-class CustomModel(Model):
-
-    @classproperty
-    def envelope(cls):
-        return cls.service.replace('-', '_')
-
-
-def gen_services(services_list):
+def create_models(services_list):
     for service in services_list:
         model = type(service, (Model,), {})
         globals().setdefault(service, model)
 
 
-gen_services(services_list)
+create_models(services_list)
 
 __all__ = ["Model", "services_list"] + services_list
