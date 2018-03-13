@@ -26,6 +26,10 @@ class Model(Thingy):
                                **kwargs)
 
     @classmethod
+    def get(cls, **kwargs):
+        return cls.client.get(cls.service, **kwargs)
+
+    @classmethod
     def find_one(cls, **kwargs):
         return cls.find(**kwargs).first
 
