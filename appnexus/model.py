@@ -1,5 +1,6 @@
 import logging
 import re
+import time
 
 from thingy import Thingy
 
@@ -74,7 +75,9 @@ class Model(Thingy):
             result = self.create(payload, **kwargs)
         else:
             result = self.modify(payload, id=self.id, **kwargs)
-        return result
+
+        self.update(result)
+        return self
 
 
 class Campaign(Model):
@@ -82,6 +85,21 @@ class Campaign(Model):
     @property
     def profile(self):
         return Profile.find_one(id=self.profile_id)
+
+
+class Report(Model):
+
+    def download(self, retry_count=3, **kwargs):
+        # Check if the report is ready to download
+        while self.is_ready() != "ready" and retry_count > 0:
+            logger.debug("Report not ready yet; retrying again")
+            retry_count -= 1
+            time.sleep(1)
+
+        return self.client.get("report-download", id=self.report_id)
+
+    def is_ready(self):
+        return self.client.get("report", id=self.report_id)["execution_status"]
 
 
 def create_models(services_list):

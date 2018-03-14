@@ -103,6 +103,7 @@ def test_check_errors_noauth(mocker, client):
 
 def test_send_success(mocker, connected_client):
     mocker.patch("requests.get")
+    requests.get.return_value.headers = {"Content-Type": "application/json"}
     requests.get().json.return_value = {"response": {"campaign": {}}}
     response = connected_client._send(requests.get, "campaign", id=3)
     assert "campaign" in response
@@ -112,6 +113,7 @@ def test_send_reconnect(mocker, connected_client):
     mocker.patch("requests.get")
     mocker.patch("requests.post")
     requests.post().json.return_value = {"response": {"token": token}}
+    requests.get.return_value.headers = {"Content-Type": "application/json"}
     requests.get().json.side_effect = [{"response": {"error_id": "NOAUTH"}},
                                        {"response": {"campaign": {}}}]
     response = connected_client._send(requests.get, "campaign", id=3)
@@ -126,12 +128,14 @@ def test_send_handle_rate_exceeded(mocker, connected_client):
         {"response": {"error_code": "RATE_EXCEEDED"}},
         {"response": {"campaign": {}}}
     ]
+    requests.get.return_value.headers = {"Content-Type": "application/json"}
     connected_client._send(requests.get, "campaign", id=3)
     assert connected_client._handle_rate_exceeded.called
 
 
 def test_send_unknown_error(mocker, connected_client):
     mocker.patch("requests.get")
+    requests.get.return_value.headers = {"Content-Type": "application/json"}
     requests.get().json.return_value = {"response": {"error_id": "WHATEVER"}}
     with pytest.raises(AppNexusException):
         connected_client._send(requests.get, "campaign", id=3)
@@ -148,6 +152,7 @@ def test_send_method_send_json(mocker, connected_client):
 def test_send_raw(mocker, connected_client):
     mocker.patch("requests.get")
     requests.get().json.return_value = {"response": {"campaign": {}}}
+    requests.get.return_value.headers = {"Content-Type": "application/json"}
     response = connected_client._send(requests.get, "campaign", id=3, raw=True)
     assert "response" in response
 
@@ -155,6 +160,7 @@ def test_send_raw(mocker, connected_client):
 def test_get_return_dict(mocker, connected_client):
     mocker.patch("requests.get")
     requests.get().json.return_value = {"response": {"campaign": {}}}
+    requests.get.return_value.headers = {"Content-Type": "application/json"}
     cursor = connected_client.get("campaign")
     assert isinstance(cursor, dict)
 
@@ -162,6 +168,7 @@ def test_get_return_dict(mocker, connected_client):
 def test_modify_return_dict(mocker, connected_client):
     mocker.patch("requests.put")
     requests.put().json.return_value = {"response": {"campaign": {}}}
+    requests.put.return_value.headers = {"Content-Type": "application/json"}
     cursor = connected_client.modify("campaign", None)
     assert isinstance(cursor, dict)
 
@@ -177,6 +184,7 @@ def test_modify_send_json(mocker, connected_client):
 def test_create_return_dict(mocker, connected_client):
     mocker.patch("requests.post")
     requests.post().json.return_value = {"response": {"campaign": {}}}
+    requests.post.return_value.headers = {"Content-Type": "application/json"}
     cursor = connected_client.create("campaign", None)
     assert isinstance(cursor, dict)
 
@@ -192,6 +200,7 @@ def test_create_send_json(mocker, connected_client):
 def test_delete_return_dict(mocker, connected_client):
     mocker.patch("requests.delete")
     requests.delete().json.return_value = {"response": {"campaign": {}}}
+    requests.delete.return_value.headers = {"Content-Type": "application/json"}
     cursor = connected_client.delete("campaign", 42)
     assert isinstance(cursor, dict)
 
@@ -208,6 +217,7 @@ def test_delete_send_ids(mocker, connected_client):
 def test_append_return_dict(mocker, connected_client):
     mocker.patch("requests.put")
     requests.put().json.return_value = {"response": {"campaign": {}}}
+    requests.put.return_value.headers = {"Content-Type": "application/json"}
     cursor = connected_client.append("campaign", None)
     assert isinstance(cursor, dict)
 

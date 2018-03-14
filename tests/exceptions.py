@@ -9,6 +9,7 @@ def appnexus_exception(mocker):
     response.json.return_value = {
         "response": {
             "error_code": "INVALID_LOGIN",
+            "error_id": "INVALID_LOGIN",
             "error": "You didn't provided credentials"
         }
     }

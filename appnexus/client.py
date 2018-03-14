@@ -84,7 +84,13 @@ class AppNexusClient(object):
             logger.debug(' '.join(map(str, (headers, uri, data))))
 
             response = send_method(uri, headers=headers, json=data)
-            response_data = response.json()
+            content_type = response.headers["Content-Type"].split(";")[0]
+
+            if content_type == "application/json":
+                response_data = response.json()
+            else:
+                return response.content
+
             try:
                 self.check_errors(response, response_data["response"])
             except RateExceeded:
@@ -227,7 +233,7 @@ services_list = ["AccountRecovery", "AdProfile", "Advertiser", "AdQualityRule",
                  "PostalCode", "Profile", "ProfileSummary", "Publisher",
                  "Region", "ReportStatus", "Search", "Segment", "Site",
                  "TechnicalAttribute", "Template", "ThirdpartyPixel", "User",
-                 "UsergroupPattern", "VisibilityProfile"]
+                 "UsergroupPattern", "VisibilityProfile", "Report"]
 
 
 class Service(object):
