@@ -4,7 +4,7 @@ import pytest
 
 from appnexus.client import AppNexusClient
 from appnexus.cursor import Cursor
-from appnexus.model import Model
+from appnexus.model import Model, Report
 
 Model.client = AppNexusClient("Test.", "dumb")
 
@@ -33,6 +33,30 @@ def response2():
         },
         "count": 1
     }
+
+
+def test_report_create_returns_instance_report(mocker):
+    mocker.patch.object(Report.client, 'create')
+    report = Report().save()
+    assert isinstance(report, Report)
+
+
+def test_report_download(mocker):
+    mocker.patch.object(Report.client, 'create')
+    Report.client.create.return_value = {
+        'report_id': 12345
+    }
+    report = Report().save()
+
+    mocker.patch.object(Report, 'is_ready')
+    Report.is_ready.return_value = 'ready'
+
+    mocker.patch.object(Report.client, 'get')
+    Report.client.get.return_value = b''
+    data = report.download()
+
+    assert Report.client.get.called
+    assert data == b''
 
 
 def test_model_init_by_dict():
