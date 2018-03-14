@@ -170,6 +170,7 @@ Reports
 -------
 
 Retrieving report data has 3 steps:
+
 1. Creating a report
 2. Check if the report is ready to download
 3. Download the report
