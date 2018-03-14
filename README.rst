@@ -62,8 +62,8 @@ creative. Here is the complete list of services usable with AppNexus-client:
 ``PackageBuyerAccess``, ``PaymentRule``, ``Pixel``, ``Placement``,
 ``PlatformMember``, ``Profile``, ``ProfileSummary``, ``Publisher``, ``Region``,
 ``ReportStatus``, ``Search``, ``Segment``, ``Site``, ``TechnicalAttribute``,
-``Template``, ``ThirdpartyPixel``, ``User``, ``UsergroupPattern``,
-and ``VisibilityProfile``
+``Template``, ``ThirdpartyPixel``, ``User``, ``UsergroupPattern``, ``VisibilityProfile``,
+and ``Report``
 
 
 Connecting
@@ -164,6 +164,42 @@ dictionaries you would do the following:
         return object.view()
 
     connect("username", "password", representation=dict_representation)
+
+
+Reports
+-------
+
+Retrieving report data has 3 steps:
+1. Creating a report
+2. Check if the report is ready to download
+3. Download the report
+
+The ``download`` method on ``Report`` object takes care of checking if the report is
+available for download and retires it by default for 3 times with an interval of 1 second.
+The number of retries can be overridden by passing the parameter ``retry_count`` to the ``download``
+method
+
+.. code-block:: python
+
+    from appnexus import Report
+
+    json = {
+        "report_type": "network_analytics",
+        "columns": [
+            "clicks",
+            "total_convs",
+            "insertion_order_id",
+            "line_item_id",
+        ],
+        "report_interval": "lifetime",
+        "format": "csv"
+    }
+
+    report_obj = Report(json).save()
+    data = report_obj.download()
+
+    # Increase retry count
+    # data = report_obj.download(retry_count=5)
 
 
 Tests
