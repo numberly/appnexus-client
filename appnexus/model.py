@@ -75,7 +75,9 @@ class Model(Thingy):
             result = self.create(payload, **kwargs)
         else:
             result = self.modify(payload, id=self.id, **kwargs)
-        return type(self)(result)
+
+        self.update(result)
+        return self
 
 
 class Campaign(Model):
