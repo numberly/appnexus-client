@@ -84,9 +84,9 @@ class AppNexusClient(object):
             logger.debug(' '.join(map(str, (headers, uri, data))))
 
             response = send_method(uri, headers=headers, json=data)
-            content_type = response.headers['Content-Type'].split(';')[0]
+            content_type = response.headers["Content-Type"].split(";")[0]
 
-            if content_type == 'application/json':
+            if content_type == "application/json":
                 response_data = response.json()
             else:
                 return response.content
