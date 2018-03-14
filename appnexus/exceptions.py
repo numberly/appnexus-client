@@ -8,7 +8,7 @@ class AppNexusException(Exception):
         if not self.response:
             return "Error with AppNexus API"
         data = self.response.json()["response"]
-        error_name = data["error_code"] or data["error_id"]
+        error_name = data.get('error_code', data["error_id"])
         description_error = data.get("error", "(indisponible)")
         return "{}: {}".format(error_name, description_error)
 
