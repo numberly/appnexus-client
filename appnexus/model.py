@@ -89,7 +89,7 @@ class Report(Model):
 
     def download(self, retry_count=3, **kwargs):
         # Check if the report is ready to download
-        while self.is_ready() != 'ready' and retry_count > 0:
+        while self.is_ready() != "ready" and retry_count > 0:
             logger.debug("Report not ready yet; retrying again")
             retry_count -= 1
             time.sleep(1)
@@ -97,7 +97,7 @@ class Report(Model):
         return self.client.get("report-download", id=self.report_id)
 
     def is_ready(self):
-        return self.client.get('report', id=self.report_id)['execution_status']
+        return self.client.get("report", id=self.report_id)["execution_status"]
 
 
 def create_models(services_list):
