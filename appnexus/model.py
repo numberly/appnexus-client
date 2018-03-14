@@ -74,7 +74,7 @@ class Model(Thingy):
             result = self.create(payload, **kwargs)
         else:
             result = self.modify(payload, id=self.id, **kwargs)
-        return result
+        return type(self)(result)
 
 
 class Campaign(Model):
@@ -86,9 +86,8 @@ class Campaign(Model):
 
 class Report(Model):
 
-    @classmethod
-    def download(cls, **kwargs):
-        return cls.client.get("report-download", **kwargs)
+    def download(self, **kwargs):
+        return self.client.get("report-download", id=self.report_id)
 
 
 def create_models(services_list):
