@@ -26,6 +26,7 @@ author = 'numberly'
 # ones.
 extensions = [
     'sphinx.ext.autodoc',
+    'sphinx.ext.viewcode',
 ]
 
 # The master toctree document.
