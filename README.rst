@@ -13,6 +13,8 @@ AppNexus-client
    :target: https://travis-ci.org/numberly/appnexus-client
 .. image:: https://img.shields.io/coveralls/numberly/appnexus-client.svg
    :target: https://coveralls.io/github/numberly/appnexus-client
+.. image:: http://readthedocs.org/projects/appnexus-client/badge
+   :target: http://appnexus-client.readthedocs.io
 
 |
 
