@@ -40,6 +40,9 @@ master_doc = 'index'
 #
 html_theme = 'alabaster'
 
+# Add any paths that contain templates here, relative to this directory.
+templates_path = ['_templates']
+
 html_sidebars = {
     '**': [
         'github-corners.html'
