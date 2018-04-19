@@ -149,10 +149,11 @@ use a function that exposes this signature:
 
     function(client, service, object)
 
-The ``client`` argument is an ``AppNexusClient`` instance. ``service`` must be a
-string representing the service to which the object belongs. ``object`` is a
-python dictionary containing data about an AppNexus entity. The return value of
-this function will be used as the data representation.
+The ``client`` argument is an ``AppNexusClient`` instance. ``service`` is the
+string representation of the service to which the object belongs. ``object`` is
+a Thingy_ instance of the service class, containing all the data about the
+AppNexus entity. The return value of this function will be used as the data
+representation.
 
 To use this function and get the desired data representation, you must pass it
 to the client as the ``representation`` keyword argument.
@@ -162,10 +163,13 @@ dictionaries you would do the following:
 
 .. code-block:: python
 
-    def dict_representation(client, service, object):
+    def dict_representation(_, _, object):
         return object.view()
 
     connect("username", "password", representation=dict_representation)
+
+Please refer to Thingy_ documentation for more information on what you can do
+with ``object``.
 
 
 Reports
