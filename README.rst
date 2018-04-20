@@ -163,7 +163,7 @@ dictionaries you would do the following:
 
 .. code-block:: python
 
-    def dict_representation(_, _, object):
+    def dict_representation(client, service, object):
         return object.view()
 
     connect("username", "password", representation=dict_representation)
