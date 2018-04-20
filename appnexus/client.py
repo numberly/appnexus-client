@@ -26,7 +26,7 @@ class AppNexusClient(object):
     error_ids = {"NOAUTH": NoAuth}
 
     def __init__(self, username=None, password=None, test=False,
-                 representation=representations.raw, token_file=None):
+                 representation=None, token_file=None):
         self.credentials = {"username": username, "password": password}
         self.token = None
         self.token_file = None

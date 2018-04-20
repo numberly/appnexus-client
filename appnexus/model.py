@@ -23,7 +23,10 @@ class Model(Thingy):
 
     @classmethod
     def find(cls, **kwargs):
-        return cls.client.find(cls.service, representation=cls.constructor,
+        representation = (kwargs.pop("representation", None)
+                          or cls.client.representation
+                          or cls.constructor)
+        return cls.client.find(cls.service, representation=representation,
                                **kwargs)
 
     @classmethod

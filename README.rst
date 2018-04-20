@@ -151,25 +151,31 @@ use a function that exposes this signature:
 
 The ``client`` argument is an ``AppNexusClient`` instance. ``service`` is the
 string representation of the service to which the object belongs. ``object`` is
-a Thingy_ instance of the service class, containing all the data about the
-AppNexus entity. The return value of this function will be used as the data
-representation.
+a dictionary containing the data about the AppNexus entity. The return value
+of this function will be used as the data representation.
 
 To use this function and get the desired data representation, you must pass it
 to the client as the ``representation`` keyword argument.
 
-For example, if you would want your data to be in the form of simple
-dictionaries you would do the following:
+If you want your data to be in the form of simple dictionaries rather than
+Thingy_ instances, AppNexus-client provides a ``raw`` representation that you
+can use pretty easily:
 
 .. code-block:: python
 
-    def dict_representation(client, service, object):
-        return object.view()
+    from appnexus.representations import raw
 
-    connect("username", "password", representation=dict_representation)
+    connect("username", "password", representation=raw)
 
-Please refer to Thingy_ documentation for more information on what you can do
-with ``object``.
+But if, for example, you would prefer to get lists of tuples, you would have to
+craft your own representation function:
+
+.. code-block:: python
+
+    def representation(client, service, object):
+        return object.items()
+
+    connect("username", "password", representation=raw)
 
 
 Reports

@@ -88,6 +88,15 @@ def test_model_find_one_returns_model_instance(mocker, response2):
     assert isinstance(Campaign.find_one(), Campaign)
 
 
+def test_model_find_one_uses_representation(mocker, response2):
+    from appnexus.representations import raw
+
+    mocker.patch.object(Campaign.client, 'get')
+    Campaign.client.get.return_value = response2
+    Campaign.client.representation = raw
+    assert isinstance(Campaign.find_one(), dict)
+
+
 def test_model_count(mocker, response):
     mocker.patch.object(Campaign.client, 'get')
     Campaign.client.get.return_value = response
