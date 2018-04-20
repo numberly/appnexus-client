@@ -172,10 +172,10 @@ craft your own representation function:
 
 .. code-block:: python
 
-    def representation(client, service, object):
+    def custom_representation(client, service, object):
         return object.items()
 
-    connect("username", "password", representation=raw)
+    connect("username", "password", representation=custom_representation)
 
 
 Reports
