@@ -6,6 +6,7 @@ import requests
 
 from appnexus.client import AppNexusClient
 from appnexus.exceptions import AppNexusException, BadCredentials, NoAuth
+from appnexus.representations import raw
 
 
 @pytest.fixture
@@ -296,7 +297,7 @@ def test_global_client_connect(mocker):
     from appnexus import client, connect
     mocker.patch.object(client, "connect")
     credentials = {"username": "appnexususer", "password": "my-password"}
-    connect(**credentials)
+    connect(representation=raw, **credentials)
     assert client.connect.called
 
 

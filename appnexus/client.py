@@ -1,3 +1,4 @@
+import functools
 import logging
 import time
 import os
@@ -263,16 +264,19 @@ class Service(object):
 client = AppNexusClient()
 
 
-def connect(username, password, test=None, token_file=None):
-    return client.connect(username, password, test, token_file)
+@functools.wraps(client.connect)
+def connect(*args, **kwargs):
+    return client.connect(*args, **kwargs)
 
 
-def connect_from_file(filename):
-    return client.connect_from_file(filename)
+@functools.wraps(client.connect_from_file)
+def connect_from_file(*args, **kwargs):
+    return client.connect_from_file(*args, **kwargs)
 
 
-def find(service, arguments=None, representation=None, **kwargs):
-    return client.find(service, arguments, representation, **kwargs)
+@functools.wraps(client.find)
+def find(*args, **kwargs):
+    return client.find(*args, **kwargs)
 
 
 __all__ = ["AppNexusClient", "client", "connect", "find"]
