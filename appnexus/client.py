@@ -4,7 +4,6 @@ import os
 
 import requests
 
-from appnexus import representations
 from appnexus.cursor import Cursor
 from appnexus.exceptions import (AppNexusException, BadCredentials,
                                  NoAuth, RateExceeded)
