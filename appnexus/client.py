@@ -36,11 +36,11 @@ class AppNexusClient(object):
 
         self._generate_services()
 
-    def _prepare_uri(self, service, **parameters):
+    def _prepare_uri(self, service_name, **parameters):
         """Prepare the URI for a request
 
-        :param service: The target service
-        :type service: str
+        :param service_name: The target service
+        :type service_name: str
         :param kwargs: query parameters
         :return: The uri of the request
         """
@@ -54,9 +54,9 @@ class AppNexusClient(object):
 
         if query_parameters:
             query_parameters = "&".join(query_parameters)
-            uri = "{}{}?{}".format(self.base_url, service, query_parameters)
+            uri = "{}{}?{}".format(self.base_url, service_name, query_parameters)
         else:
-            uri = "{}{}".format(self.base_url, service)
+            uri = "{}{}".format(self.base_url, service_name)
         return uri
 
     # shiro: Coverage is disabled for this function because it's mocked and it
@@ -66,12 +66,12 @@ class AppNexusClient(object):
         waiting_time = int(response.headers.get("Retry-After", 10))
         time.sleep(waiting_time)
 
-    def _send(self, send_method, service, data=None, **kwargs):
+    def _send(self, send_method, service_name, data=None, **kwargs):
         """Send a request to the AppNexus API (used for internal routing)
 
         :param send_method: The method sending the request (usualy requests.*)
         :type send_method: function
-        :param service: The target service
+        :param service_name: The target service
         :param data: The payload of the request (optionnal)
         :type data: anything JSON-serializable
         """
@@ -80,7 +80,7 @@ class AppNexusClient(object):
 
         while not valid_response:
             headers = dict(Authorization=self.token)
-            uri = self._prepare_uri(service, **kwargs)
+            uri = self._prepare_uri(service_name, **kwargs)
             logger.debug(' '.join(map(str, (headers, uri, data))))
 
             response = send_method(uri, headers=headers, json=data)
@@ -137,35 +137,36 @@ class AppNexusClient(object):
         if "error_code" in data or "error_id" in data:
             raise AppNexusException(response)
 
-    def get(self, service, **kwargs):
+    def get(self, service_name, **kwargs):
         """Retrieve data from AppNexus API"""
-        return self._send(requests.get, service, **kwargs)
+        return self._send(requests.get, service_name, **kwargs)
 
-    def modify(self, service, json, **kwargs):
+    def modify(self, service_name, json, **kwargs):
         """Modify an AppNexus object"""
-        return self._send(requests.put, service, json, **kwargs)
+        return self._send(requests.put, service_name, json, **kwargs)
 
-    def create(self, service, json, **kwargs):
+    def create(self, service_name, json, **kwargs):
         """Create a new AppNexus object"""
-        return self._send(requests.post, service, json, **kwargs)
+        return self._send(requests.post, service_name, json, **kwargs)
 
-    def delete(self, service, *ids, **kwargs):
+    def delete(self, service_name, *ids, **kwargs):
         """Delete an AppNexus object"""
-        return self._send(requests.delete, service, id=ids, **kwargs)
+        return self._send(requests.delete, service_name, id=ids, **kwargs)
 
-    def append(self, service, json, **kwargs):
+    def append(self, service_name, json, **kwargs):
         kwargs.update({"append": True})
-        return self.modify(service, json, **kwargs)
+        return self.modify(service_name, json, **kwargs)
 
-    def meta(self, service):
+    def meta(self, service_name):
         """Retrieve meta-informations about a service"""
-        return self.get(service + "/meta")
+        return self.get(service_name + "/meta")
 
-    def find(self, service, arguments=None, representation=None, **kwargs):
+    def find(self, service_name, arguments=None, representation=None,
+             **kwargs):
         representation = representation or self.representation
         args = arguments.copy() if arguments else dict()
         args.update(kwargs)
-        return Cursor(self, service, representation, **args)
+        return Cursor(self, service_name, representation, **args)
 
     def connect(self, username, password, test=None, representation=None,
                 token_file=None):
@@ -184,8 +185,8 @@ class AppNexusClient(object):
         self.connect(**connect_data)
 
     def _generate_services(self):
-        for service in services_list:
-            normalized_name = normalize_service_name(service)
+        for service_name in services_list:
+            normalized_name = normalize_service_name(service_name)
             snake_name = normalized_name.replace('-', '_')
             generated_service = Service(self, normalized_name)
             setattr(self, snake_name, generated_service)
@@ -216,9 +217,10 @@ class AppNexusClient(object):
 
 services_list = ["AccountRecovery", "AdProfile", "Advertiser", "AdQualityRule",
                  "AdServer", "BatchSegment", "Brand", "Broker", "Browser",
-                 "Campaign", "Carrier", "Category", "City", "ContentCategory",
-                 "Country", "Creative", "CreativeFormat", "Currency",
-                 "CustomModel", "CustomModelParser", "Deal", "DealBuyerAccess",
+                 "Campaign", "Carrier", "Category", "ChangeLog",
+                 "ChangeLogDetail", "City", "ContentCategory", "Country",
+                 "Creative", "CreativeFormat", "Currency", "CustomModel",
+                 "CustomModelParser", "Deal", "DealBuyerAccess",
                  "DealFromPackage", "DemographicArea", "DeviceMake",
                  "DeviceModel", "DomainAuditStatus", "DomainList",
                  "ExternalInvCode", "InsertionOrder", "InventoryAttribute",
@@ -226,39 +228,40 @@ services_list = ["AccountRecovery", "AdProfile", "Advertiser", "AdQualityRule",
                  "LineItem", "Lookup", "NativeCustomKey", "ManualOfferRanking",
                  "MediaSubtype", "MediaType", "Member", "MobileApp",
                  "MemberProfile", "ObjectLimit", "OperatingSystem",
-                 "MobileAppInstance", "MobileAppInstanceList", "MobileAppStore",
-                 "OperatingSystemExtended", "OperatingSystemFamily",
-                 "OptimizationZone", "Package", "PackageBuyerAccess",
-                 "PaymentRule", "Pixel", "Placement", "PlatformMember",
-                 "PostalCode", "Profile", "ProfileSummary", "Publisher",
-                 "Region", "ReportStatus", "Search", "Segment", "Site",
-                 "TechnicalAttribute", "Template", "ThirdpartyPixel", "User",
-                 "UsergroupPattern", "VisibilityProfile", "Report"]
+                 "MobileAppInstance", "MobileAppInstanceList",
+                 "MobileAppStore", "OperatingSystemExtended",
+                 "OperatingSystemFamily", "OptimizationZone", "Package",
+                 "PackageBuyerAccess", "PaymentRule", "Pixel", "Placement",
+                 "PlatformMember", "PostalCode", "Profile", "ProfileSummary",
+                 "Publisher", "Region", "Report", "ReportStatus", "Search",
+                 "Segment", "Site", "TechnicalAttribute", "Template",
+                 "ThirdpartyPixel", "User", "UsergroupPattern",
+                 "VisibilityProfile"]
 
 
 class Service(object):
 
-    def __init__(self, client, service):
+    def __init__(self, client, name):
         self.client = client
-        self.service = service
+        self.name = name
 
     def find(self, arguments=None, **kwargs):
-        return self.client.find(self.service, arguments, **kwargs)
+        return self.client.find(self.name, arguments, **kwargs)
 
     def find_one(self, arguments=None, **kwargs):
         return self.find(arguments, **kwargs).first
 
     def get(self, **kwargs):
-        return self.client.get(self.service, **kwargs)
+        return self.client.get(self.name, **kwargs)
 
     def modify(self, json, **kwargs):
-        return self.client.modify(self.service, json, **kwargs)
+        return self.client.modify(self.name, json, **kwargs)
 
     def create(self, json, **kwargs):
-        return self.client.create(self.service, json, **kwargs)
+        return self.client.create(self.name, json, **kwargs)
 
     def delete(self, *args):
-        return self.client.delete(self.service, *args)
+        return self.client.delete(self.name, *args)
 
 
 client = AppNexusClient()

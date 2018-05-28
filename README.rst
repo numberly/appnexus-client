@@ -50,7 +50,8 @@ A service is an endpoint on the AppNexus API, representing an entity such as a
 creative. Here is the complete list of services usable with AppNexus-client:
 ``AccountRecovery``, ``AdProfile``, ``AdQualityRule``, ``AdServer``,
 ``Advertiser``, ``Brand``, ``Broker``, ``Browser``, ``Campaign``, ``Carrier``,
-``Category``, ``City``, ``ContentCategory``, ``Country``, ``Creative``,
+``Category``, ``ChangeLog``, ``ChangeLogDetail``, ``City``,
+``ContentCategory``, ``Country``, ``Creative``,
 ``CreativeFormat``, ``Currency``, ``CustomModel``, ``CustomModelParser``,
 ``Deal``, ``DealBuyerAccess``, ``DealFromPackage``, ``DemographicArea``,
 ``DeviceMake``, ``DeviceModel``, ``DomainAuditStatus``, ``DomainList``,
@@ -172,7 +173,7 @@ craft your own representation function:
 
 .. code-block:: python
 
-    def custom_representation(client, service, object):
+    def custom_representation(client, service_name, object):
         return object.items()
 
     connect("username", "password", representation=custom_representation)
@@ -216,6 +217,34 @@ method
 
     # Increase retry count
     data = report.download(retry_count=5)
+
+
+Changelogs
+----------
+
+ChangeLog service allow us to retrieve information about changes that have been made to an object of these services:
+``campaign``, ``insertion-order``, ``line-item`` and ``profile``
+
+Let's see when the campaign 42 was updated:
+
+.. code-block:: python
+
+   from appnexus import Campaign
+
+   campaign = Campaign.find_one(id=42)
+   for change in campaign.changelog:
+       print(change.created_on)
+
+For deeper informations you can use the ChangeLogDetail service with the returned transaction_id as parameter.
+
+.. code-block:: python
+
+   from appnexus import ChangeLogDetail
+
+   detailed_change = ChangeLogDetail.find_one(service="campaign",
+                                              resource_id=42,
+                                              transaction_id='95b75xab-...-42f1d6e4f30i')
+   print(detailed_change.user_full_name)
 
 
 Tests

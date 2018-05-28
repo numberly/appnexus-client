@@ -5,25 +5,24 @@ class Cursor(object):
     common_keys = set(["status", "count", "dbg_info", "num_elements",
                        "start_element"])
 
-    def __init__(self, client, service, representation, **specs):
+    def __init__(self, client, service_name, representation, **specs):
         """Initialize the object
 
         :param client: an AppNexusClient instance
-        :param service: the service to which the request was made
+        :param service_name: the service to which the request was made
         :param specs: The specifications sent to AppNexus with the request
         """
         # Health checks
-        if client is None or service is None:
+        if client is None or service_name is None:
             raise RuntimeError("client and service can't be set to None")
 
         if representation is None or not callable(representation):
             raise TypeError("representation must be non-null and callable")
 
         self.client = client
-        self.service = service
+        self.service_name = service_name
         self.representation = representation
         self.specs = specs
-
         self.retrieved = 0
         self._skip = 0
         self._limit = float('inf')
@@ -65,9 +64,10 @@ class Cursor(object):
         for possible_data_key in uncommon_keys:
             element = page[possible_data_key]
             if isinstance(element, dict):
-                return [self.representation(self.client, self.service, element)]
+                return [self.representation(self.client, self.service_name,
+                                            element)]
             if isinstance(element, list):
-                return [self.representation(self.client, self.service, x)
+                return [self.representation(self.client, self.service_name, x)
                         for x in element]
 
     @property
@@ -84,7 +84,7 @@ class Cursor(object):
             num_elements = self.batch_size
         specs = self.specs.copy()
         specs.update(start_element=start_element, num_elements=num_elements)
-        return self.client.get(self.service, **specs)
+        return self.client.get(self.service_name, **specs)
 
     def iter_pages(self, skip_elements=0):
         start_element = skip_elements
@@ -99,7 +99,7 @@ class Cursor(object):
         return self.get_page(num_elements=1)["count"]
 
     def clone(self):
-        return Cursor(self.client, self.service, self.representation,
+        return Cursor(self.client, self.service_name, self.representation,
                       **self.specs)
 
     def limit(self, number):
