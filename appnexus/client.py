@@ -1,3 +1,4 @@
+from datetime import datetime
 import functools
 import logging
 import time
@@ -28,12 +29,14 @@ class AppNexusClient(object):
     def __init__(self, username=None, password=None, test=False,
                  representation=None, token_file=None):
         self.credentials = {"username": username, "password": password}
+        self.private_key = None
+        self.token_handler = self.credentials_token_handler
         self.token = None
         self.token_file = None
         self.load_token(token_file)
         self.representation = representation
         self.test = bool(test)
-
+        self._current_user = None
         self._generate_services()
 
     def _prepare_uri(self, service, **parameters):
@@ -103,16 +106,52 @@ class AppNexusClient(object):
             return response_data
         return response_data["response"]
 
-    def update_token(self):
-        """Request a new token and store it for future use"""
-        logger.info('updating token')
+    def connect_from_key(self, username, key_name, private_key_filename):
+        with open(private_key_filename, 'r') as f:
+            self.private_key = {
+                "username": username,
+                "key_name": key_name,
+                "private_key": f.read(),
+            }
+            self.token_handler = self.jwt_token_handler
+
+    def jwt_token_handler(self):
+        if self.private_key is None or None in self.private_key.values():
+            raise RuntimeError("You must provide an username, "
+                               "a key_name and a private_key path")
+        from jwt import encode as jwt_encode
+        jwt_payload = {
+            "sub": self.private_key.get("username"),
+            "iat": datetime.utcnow()
+        }
+        jwt_headers = {
+            "kid": self.private_key.get("key_name"),
+            "alg": "RS256",
+            "typ": "JWT",
+        }
+        jwt_signature = jwt_encode(jwt_payload,
+                                   self.private_key.get("private_key"),
+                                   algorithm="RS256",
+                                   headers=jwt_headers)
+        response = requests.post(self.base_url + "v2/auth/jwt",
+                             headers={"Content-Type": "text/plain"},
+                             data=jwt_signature.decode())
+        return response.json()["response"]
+
+    def credentials_token_handler(self):
         if None in self.credentials.values():
             raise RuntimeError("You must provide an username and a password")
         credentials = dict(auth=self.credentials)
         url = self.test_url if self.test else self.url
         response = requests.post(url + "auth",
                                  json=credentials)
-        data = response.json()["response"]
+        return response.json()["response"]
+
+    def update_token(self):
+        """Request a new token and store it for future use"""
+        logger.info('updating token')
+        data = self.token_handler()
+        print(data)
         if "error_id" in data and data["error_id"] == "NOAUTH":
             raise BadCredentials()
         if "error_code" in data and data["error_code"] == "RATE_EXCEEDED":
@@ -206,12 +245,36 @@ class AppNexusClient(object):
         with open(self.token_file) as fp:
             self.token = fp.read().strip()
 
+    def register_public_key(self, key_name, public_key_filename,
+                            activate_key=True):
+        from appnexus import PublicKey
+        public_keys = PublicKey.find(user_id=self.current_user.id)
+        if public_keys:
+            for public_key in public_keys:
+                if public_key.name == key_name:
+                    return public_key
+        with open(public_key_filename, 'r') as f:
+            payload = {
+                "active": activate_key,
+                "name": key_name,
+                "user_id": self.current_user.id,
+                "encoded_value": f.read(),
+            }
+            return PublicKey.create(payload, user_id=self.current_user.id)
+
     @property
     def base_url(self):
         if self.test:
             return self.test_url
         else:
             return self.url
+
+    @property
+    def current_user(self):
+        if self._current_user is None:
+            from appnexus import User
+            self._current_user = User.find_one(current=True)
+        return self._current_user
 
 
 services_list = ["AccountRecovery", "AdProfile", "Advertiser", "AdQualityRule",
@@ -230,7 +293,7 @@ services_list = ["AccountRecovery", "AdProfile", "Advertiser", "AdQualityRule",
                  "OperatingSystemExtended", "OperatingSystemFamily",
                  "OptimizationZone", "Package", "PackageBuyerAccess",
                  "PaymentRule", "Pixel", "Placement", "PlatformMember",
-                 "PostalCode", "Profile", "ProfileSummary", "Publisher",
+                 "PostalCode", "Profile", "ProfileSummary", "Publisher", "PublicKey",
                  "Region", "ReportStatus", "Search", "Segment", "Site",
                  "TechnicalAttribute", "Template", "ThirdpartyPixel", "User",
                  "UsergroupPattern", "VisibilityProfile", "Report"]
