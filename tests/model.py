@@ -147,7 +147,7 @@ def test_string_representation():
 
 def test_service_can_override():
     class Test(Model):
-        _service_name = "notatest"
+        service_name = "notatest"
     assert Test.service_name == "notatest"
 
 

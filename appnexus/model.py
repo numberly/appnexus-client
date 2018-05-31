@@ -13,8 +13,6 @@ logger = logging.getLogger("appnexus-client")
 class Model(Thingy):
     """Generic model for AppNexus data"""
     client = client
-    _service_name = None
-    service_name_re = re.compile("([A-Z][a-z]*)")
 
     @classmethod
     def connect(cls, username, password):
@@ -42,18 +40,12 @@ class Model(Thingy):
         return cls.client.meta(cls.service_name)
 
     @classproperty
-    def envelope(cls):
-        return cls.service_name
-
-    @classproperty
     def service_name(cls):
-        if cls._service_name is None:
-            cls._service_name = normalize_service_name(cls.__name__)
-        return cls._service_name
+        return normalize_service_name(cls.__name__)
 
     @classmethod
     def create(cls, payload, **kwargs):
-        payload = {cls.envelope: payload}
+        payload = {cls.service_name: payload}
         return cls.client.create(cls.service_name, payload, **kwargs)
 
     @classmethod
@@ -62,13 +54,13 @@ class Model(Thingy):
 
     @classmethod
     def modify(cls, payload, **kwargs):
-        payload = {cls.envelope: payload}
+        payload = {cls.service_name: payload}
         return cls.client.modify(cls.service_name, payload, **kwargs)
 
     @classmethod
     def constructor(cls, client, service_name, obj):
         cls.client = client
-        cls._service_name = service_name
+        cls.service_name = service_name
         return cls(obj)
 
     def save(self, **kwargs):
