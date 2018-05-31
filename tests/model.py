@@ -4,13 +4,9 @@ import pytest
 
 from appnexus.client import AppNexusClient
 from appnexus.cursor import Cursor
-from appnexus.model import Model, Report
+from appnexus.model import Campaign, Model, Report
 
 Model.client = AppNexusClient("Test.", "dumb")
-
-
-class Campaign(Model):
-    service = "campaign"
 
 
 @pytest.fixture
@@ -126,13 +122,13 @@ def test_meta_call_client_meta(mocker):
 def test_guess_service_name():
     class Test(Model):
         pass
-    assert Test.service == "test"
+    assert Test.service_name == "test"
 
 
 def test_guess_composed_service_name():
     class TestService(Model):
         pass
-    assert TestService.service == "test-service"
+    assert TestService.service_name == "test-service"
 
 
 def test_setitem():
@@ -146,13 +142,13 @@ def test_setitem():
 def test_string_representation():
     x = Campaign(id=21)
     assert "21" in str(x)
-    assert x.service in str(x).lower()
+    assert x.service_name in str(x).lower()
 
 
 def test_service_can_override():
     class Test(Model):
-        _service = "notatest"
-    assert Test.service == "notatest"
+        _service_name = "notatest"
+    assert Test.service_name == "notatest"
 
 
 def test_connect():
@@ -172,3 +168,11 @@ def test_modify(mocker):
     mocker.patch.object(Campaign.client, "modify")
     Campaign.modify({"field": 42})
     assert Campaign.client.modify.called
+
+
+def test_changelog():
+    x = Campaign(id=42)
+    changelogs_cursor = x.changelog
+    assert isinstance(changelogs_cursor, Cursor)
+    assert changelogs_cursor.specs.get("resource_id") == x.id
+    assert changelogs_cursor.specs.get("service") == x.service_name
