@@ -86,16 +86,15 @@ class Model(Thingy):
 class Report(Model):
 
     def download(self, retry_count=3, **kwargs):
-        # Check if the report is ready to download
-        while self.is_ready() != "ready" and retry_count > 0:
-            logger.debug("Report not ready yet; retrying again")
+        while not self.is_ready and retry_count > 0:
             retry_count -= 1
             time.sleep(1)
-
         return self.client.get("report-download", id=self.report_id)
 
+    @property
     def is_ready(self):
-        return self.client.get("report", id=self.report_id)["execution_status"]
+        status = Report.find_one(id=self.report_id).execution_status
+        return (status == "ready")
 
 
 class ChangeLogMixin():
