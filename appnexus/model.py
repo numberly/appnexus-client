@@ -92,10 +92,8 @@ class Report(Model):
 class ChangeLogMixin():
 
     @property
-    def changelog(self, **kwargs):
-        kwargs.setdefault("service", self.service_name)
-        kwargs.setdefault("resource_id", self.id)
-        return ChangeLog.find(**kwargs)
+    def changelog(self):
+        return ChangeLog.find(service=self.service_name, resource_id=self.id)
 
 
 class ProfileMixin():
