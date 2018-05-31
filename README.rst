@@ -185,8 +185,8 @@ Reports
 Retrieving report data has 3 steps:
 
 1. Creating a report
-2. Check if the report is ready to download
-3. Download the report
+2. Checking if the report is ready to download
+3. Downloading the report
 
 .. code-block:: python
 
@@ -208,42 +208,44 @@ Retrieving report data has 3 steps:
     data = report.download()
 
 
-The ``download`` method on ``Report`` object takes care of checking if the report is
-available for download and retires it by default for 3 times with an interval of 1 second.
-The number of retries can be overridden by passing the parameter ``retry_count`` to the ``download``
-method
+The ``download`` method on ``Report`` object takes care of checking if the
+report is available for download and retires it by default for 3 times with an
+interval of 1 second.  The number of retries can be overridden by passing the
+parameter ``retry_count`` to the ``download`` method:
 
 .. code-block:: python
 
-    # Increase retry count
     data = report.download(retry_count=5)
 
 
 Changelogs
 ----------
 
-ChangeLog service allow us to retrieve information about changes that have been made to an object of these services:
-``campaign``, ``insertion-order``, ``line-item`` and ``profile``
+The ``ChangeLog`` service allows to retrieve information about changes that
+have been made to an object of those services: ``campaign``,
+``insertion-order``, ``line-item`` and ``profile``.
 
-Let's see when the campaign 42 was updated:
+For example, you can print the date of every change that was made on a
+campaign:
 
 .. code-block:: python
 
    from appnexus import Campaign
 
-   campaign = Campaign.find_one(id=42)
+   campaign = Campaign.find_one()
    for change in campaign.changelog:
        print(change.created_on)
 
-For deeper informations you can use the ChangeLogDetail service with the returned transaction_id as parameter.
+For more information on a change, you can use the ``ChangeLogDetail`` service
+with the returned ``transaction_id`` as a parameter:
 
 .. code-block:: python
 
    from appnexus import ChangeLogDetail
 
-   detailed_change = ChangeLogDetail.find_one(service="campaign",
-                                              resource_id=42,
-                                              transaction_id='95b75xab-...-42f1d6e4f30i')
+   detail = ChangeLogDetail.find_one(service="campaign",
+                                     resource_id=change.resource_id,
+                                     transaction_id=change.transaction_id)
    print(detailed_change.user_full_name)
 
 
