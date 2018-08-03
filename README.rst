@@ -49,24 +49,24 @@ Services
 A service is an endpoint on the AppNexus API, representing an entity such as a
 creative. Here is the complete list of services usable with AppNexus-client:
 ``AccountRecovery``, ``AdProfile``, ``AdQualityRule``, ``AdServer``,
-``Advertiser``, ``Brand``, ``Broker``, ``Browser``, ``Campaign``, ``Carrier``,
-``Category``, ``ChangeLog``, ``ChangeLogDetail``, ``City``,
-``ContentCategory``, ``Country``, ``Creative``,
-``CreativeFormat``, ``Currency``, ``CustomModel``, ``CustomModelParser``,
-``Deal``, ``DealBuyerAccess``, ``DealFromPackage``, ``DemographicArea``,
-``DeviceMake``, ``DeviceModel``, ``DomainAuditStatus``, ``DomainList``,
-``ExternalInvCode``, ``InsertionOrder``, ``InventoryAttribute``,
-``InventoryResold``, ``IpRangeList``, ``Label``, ``Language``, ``LineItem``,
-``Lookup``, ``ManualOfferRanking``, ``MediaSubtype``, ``MediaType``, ``Member``,
+``Advertiser``, ``BatchSegment``, ``Brand``, ``Broker``, ``Browser``,
+``Campaign``, ``Carrier``, ``Category``, ``ChangeLog``, ``ChangeLogDetail``,
+``City``, ``ContentCategory``, ``Country``, ``Creative``, ``CreativeFormat``,
+``Currency``, ``CustomModel``, ``CustomModelParser``, ``Deal``,
+``DealBuyerAccess``, ``DealFromPackage``, ``DemographicArea``, ``DeviceMake``,
+``DeviceModel``, ``DomainAuditStatus``, ``DomainList``, ``ExternalInvCode``,
+``InsertionOrder``, ``InventoryAttribute``, ``InventoryResold``,
+``IpRangeList``, ``Label``, ``Language``, ``LineItem``, ``Lookup``,
+``ManualOfferRanking``, ``MediaSubtype``, ``MediaType``, ``Member``,
 ``MemberProfile``, ``MobileApp``, ``MobileAppInstance``,
 ``MobileAppInstanceList``, ``MobileAppStore``, ``NativeCustomKey``,
 ``ObjectLimit``, ``OperatingSystem``, ``OperatingSystemExtended``,
 ``OperatingSystemFamily``, ``OptimizationZone``, ``Package``,
 ``PackageBuyerAccess``, ``PaymentRule``, ``Pixel``, ``Placement``,
-``PlatformMember``, ``Profile``, ``ProfileSummary``, ``Publisher``, ``Region``,
-``ReportStatus``, ``Search``, ``Segment``, ``Site``, ``TechnicalAttribute``,
-``Template``, ``ThirdpartyPixel``, ``User``, ``UsergroupPattern``, ``VisibilityProfile``,
-and ``Report``
+``PlatformMember``, ``PostalCode``, ``Profile``, ``ProfileSummary``,
+``Publisher``, ``Region``, ``Report``, ``ReportStatus``, ``Search``,
+``Segment``, ``Site``, ``TechnicalAttribute``, ``Template``,
+``ThirdpartyPixel``, ``User``, ``UsergroupPattern``, ``VisibilityProfile``
 
 
 Connecting
