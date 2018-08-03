@@ -2,8 +2,8 @@ class Cursor(object):
     """Represents a cursor on collection of AppNexus objects"""
 
     batch_size = 100
-    common_keys = set(["status", "count", "dbg_info", "num_elements",
-                       "start_element"])
+    common_keys = {"status", "count", "dbg_info", "num_elements",
+                   "start_element"}
 
     def __init__(self, client, service_name, representation, **specs):
         """Initialize the object
