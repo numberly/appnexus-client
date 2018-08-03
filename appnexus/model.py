@@ -12,6 +12,7 @@ logger = logging.getLogger("appnexus-client")
 
 class Model(Thingy):
     """Generic model for AppNexus data"""
+    _update_on_save = True
     client = client
 
     @classmethod
@@ -71,8 +72,53 @@ class Model(Thingy):
         else:
             result = self.modify(payload, id=self.id, **kwargs)
 
-        self.update(result)
+        if self._update_on_save:
+            self.update(result)
         return self
+
+
+class GenieModel(Model):
+    _update_on_save = False
+    _modifiable_fields = ()
+
+    def __setattr__(self, attr, value):
+        if self._modifiable_fields and attr not in self._modifiable_fields:
+            super(GenieModel, self).__setattr__(attr, value)
+        raise AttributeError("'{}' can't be modified".format(attr))
+
+    @classmethod
+    def find(cls, **kwargs):
+        raise NotImplemented("Can't get multiple objects on '{}' service"
+                             .format(cls.service_name))
+
+    @classmethod
+    def find_one(cls, **kwargs):
+        representation = (kwargs.pop("representation", None)
+                          or cls.client.representation
+                          or cls.constructor)
+        response = cls.client.get(cls.service_name, **kwargs)
+        if representation:
+            return representation(cls.client, cls.service_name, response)
+        return response
+
+    @classmethod
+    def modify(cls, payload, **kwargs):
+        non_modifiable_fields = set(payload) - set(cls._modifiable_fields)
+        for field in non_modifiable_fields:
+            del payload[field]
+        return super(GenieModel, cls).modify(payload, **kwargs)
+
+
+class CustomModelHash(GenieModel):
+    _modifiable_fields = ("coefficients",)
+
+
+class CustomModelLogit(GenieModel):
+    pass
+
+
+class CustomModelLut(GenieModel):
+    _modifiable_fields = ("coefficients",)
 
 
 class Report(Model):

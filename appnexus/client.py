@@ -86,13 +86,17 @@ class AppNexusClient(object):
             response = send_method(uri, headers=headers, json=data)
             content_type = response.headers["Content-Type"].split(";")[0]
 
-            if content_type == "application/json":
+            if response.content and content_type == "application/json":
                 response_data = response.json()
-            else:
+                if "response" in response_data:
+                    response_data = response_data["response"]
+            elif response.content:
                 return response.content
+            else:
+                return None
 
             try:
-                self.check_errors(response, response_data["response"])
+                self.check_errors(response, response_data)
             except RateExceeded:
                 self._handle_rate_exceeded(response)
             except NoAuth:
@@ -100,8 +104,8 @@ class AppNexusClient(object):
             else:
                 valid_response = True
         if raw:
-            return response_data
-        return response_data["response"]
+            return response.json()
+        return response_data
 
     def update_token(self):
         """Request a new token and store it for future use"""
@@ -220,6 +224,7 @@ services_list = ["AccountRecovery", "AdProfile", "AdQualityRule", "AdServer",
                  "Campaign", "Carrier", "Category", "ChangeLog",
                  "ChangeLogDetail", "City", "ContentCategory", "Country",
                  "Creative", "CreativeFormat", "Currency", "CustomModel",
+                 "CustomModelHash", "CustomModelLogit", "CustomModelLut",
                  "CustomModelParser", "Deal", "DealBuyerAccess",
                  "DealFromPackage", "DemographicArea", "DeviceMake",
                  "DeviceModel", "DomainAuditStatus", "DomainList",
