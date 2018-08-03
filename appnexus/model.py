@@ -117,7 +117,7 @@ class CustomModelLogit(GenieModel):
     pass
 
 
-class CustomModelLut(GenieModel):
+class CustomModelLUT(GenieModel):
     _modifiable_fields = ("coefficients",)
 
 
