@@ -1,13 +1,13 @@
 import functools
 import logging
-import time
 import os
+import time
 
 import requests
 
 from appnexus.cursor import Cursor
-from appnexus.exceptions import (AppNexusException, BadCredentials,
-                                 NoAuth, RateExceeded)
+from appnexus.exceptions import (AppNexusException, BadCredentials, NoAuth,
+                                 RateExceeded)
 from appnexus.utils import normalize_service_name
 
 try:
@@ -53,8 +53,8 @@ class AppNexusClient(object):
             query_parameters.append("{}={}".format(key, value))
 
         if query_parameters:
-            query_parameters = "&".join(query_parameters)
-            uri = "{}{}?{}".format(self.base_url, service_name, query_parameters)
+            uri = "{}{}?{}".format(self.base_url, service_name,
+                                   "&".join(query_parameters))
         else:
             uri = "{}{}".format(self.base_url, service_name)
         return uri

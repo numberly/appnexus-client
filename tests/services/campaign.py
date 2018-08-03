@@ -1,7 +1,7 @@
 import pytest
 
-from appnexus.client import AppNexusClient
 from appnexus import Campaign, Profile
+from appnexus.client import AppNexusClient
 
 
 @pytest.fixture

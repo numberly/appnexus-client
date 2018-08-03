@@ -1,5 +1,4 @@
 import logging
-import re
 import time
 
 from thingy import Thingy
@@ -138,14 +137,14 @@ class Report(Model):
 class ChangeLogMixin():
 
     @property
-    def changelog(self):
+    def changelog(self):  # flake8: noqa: F821
         return ChangeLog.find(service=self.service_name, resource_id=self.id)
 
 
 class ProfileMixin():
 
     @property
-    def profile(self):
+    def profile(self):  # flake8: noqa: F821
         return Profile.find_one(id=self.profile_id)
 
 

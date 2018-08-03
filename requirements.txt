@@ -6,3 +6,6 @@ pytest-cov==2.4.0
 pytest-mock==1.6.2
 
 sphinx==1.7.2
+
+flake8
+flake8-isort
