@@ -91,10 +91,7 @@ class AlphaModel(Model):
                              .format(cls.service_name))
 
     @classmethod
-    def find_one(cls, **kwargs):
-        if "id" not in kwargs:
-            raise Exception("Should provide an id to retrieve objects from "
-                            "'{}' service.".format(cls.service_name))
+    def find_one(cls, id, **kwargs):
         representation = (kwargs.pop("representation", None)
                           or cls.client.representation
                           or cls.constructor)
