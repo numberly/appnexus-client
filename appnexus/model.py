@@ -76,13 +76,13 @@ class Model(Thingy):
         return self
 
 
-class GenieModel(Model):
+class AlphaModel(Model):
     _update_on_save = False
     _modifiable_fields = ()
 
     def __setattr__(self, attr, value):
         if self._modifiable_fields and attr not in self._modifiable_fields:
-            super(GenieModel, self).__setattr__(attr, value)
+            super(AlphaModel, self).__setattr__(attr, value)
         raise AttributeError("'{}' can't be modified".format(attr))
 
     @classmethod
@@ -92,6 +92,9 @@ class GenieModel(Model):
 
     @classmethod
     def find_one(cls, **kwargs):
+        if "id" not in kwargs:
+            raise Exception("Should provide an id to retrieve objects from "
+                            "'{}' service.".format(cls.service_name))
         representation = (kwargs.pop("representation", None)
                           or cls.client.representation
                           or cls.constructor)
@@ -105,19 +108,23 @@ class GenieModel(Model):
         non_modifiable_fields = set(payload) - set(cls._modifiable_fields)
         for field in non_modifiable_fields:
             del payload[field]
-        return super(GenieModel, cls).modify(payload, **kwargs)
+        return super(AlphaModel, cls).modify(payload, **kwargs)
 
 
-class CustomModelHash(GenieModel):
+class CustomModelHash(AlphaModel):
     _modifiable_fields = ("coefficients",)
 
 
-class CustomModelLogit(GenieModel):
+class CustomModelLogit(AlphaModel):
     pass
 
 
-class CustomModelLUT(GenieModel):
+class CustomModelLUT(AlphaModel):
     _modifiable_fields = ("coefficients",)
+
+
+class LineItemModel(AlphaModel):
+    pass
 
 
 class Report(Model):
