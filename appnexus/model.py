@@ -95,7 +95,7 @@ class AlphaModel(Model):
         representation = (kwargs.pop("representation", None)
                           or cls.client.representation
                           or cls.constructor)
-        response = cls.client.get(cls.service_name, **kwargs)
+        response = cls.client.get(cls.service_name, id=id, **kwargs)
         if representation:
             return representation(cls.client, cls.service_name, response)
         return response
