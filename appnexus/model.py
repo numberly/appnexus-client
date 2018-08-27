@@ -82,8 +82,9 @@ class AlphaModel(Model):
 
     def __setattr__(self, attr, value):
         if self._modifiable_fields and attr not in self._modifiable_fields:
+            raise AttributeError("'{}' can't be modified".format(attr))
+        else:
             super(AlphaModel, self).__setattr__(attr, value)
-        raise AttributeError("'{}' can't be modified".format(attr))
 
     @classmethod
     def find(cls, **kwargs):
