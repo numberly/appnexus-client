@@ -113,8 +113,8 @@ class CustomModelHash(AlphaModel):
 
 
 class CustomModelLogit(AlphaModel):
-    _modifiable_fields = ('scale', 'min', 'max', 'name', 'offset', 'member_id',
-                          'beta0', 'active', 'predictors')
+    _modifiable_fields = ("beta0", "active", "predictors" "scale", "min",
+                          "max", "name", "offset", "member_id")
 
 
 class CustomModelLUT(AlphaModel):
