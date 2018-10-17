@@ -139,6 +139,13 @@ class Report(Model):
         return (status == "ready")
 
 
+class BudgetSplitterMixin():
+
+    @property   # flake8: noqa: F821
+    def budget_splitter(self):
+        return BudgetSplitter.find_one(id=self.id)
+
+
 class ChangeLogMixin():
 
     @property
@@ -156,6 +163,8 @@ class ProfileMixin():
 def create_models(services_list):
     for service_name in services_list:
         ancestors = [Model]
+        if service_name in ("LineItem"):
+            ancestors.append(BudgetSplitterMixin)
         if service_name in ("Campaign", "InsertionOrder", "LineItem",
                             "Profile"):
             ancestors.append(ChangeLogMixin)
