@@ -1,3 +1,6 @@
+# Get rid of requests warning:
+urllib3==1.21.1
+
 requests==2.18.1
 Thingy==0.8.3
 
