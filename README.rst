@@ -247,7 +247,7 @@ with the returned ``transaction_id`` as a parameter:
    detail = ChangeLogDetail.find_one(service="campaign",
                                      resource_id=change.resource_id,
                                      transaction_id=change.transaction_id)
-   print(detailed_change.user_full_name)
+   print(detail.user_full_name)
 
 
 Tests
