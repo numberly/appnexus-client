@@ -30,7 +30,7 @@ setup(
     download_url="https://github.com/numberly/appnexus-client/tags",
     platforms="any",
     packages=["appnexus"],
-    install_requires=["requests",
+    install_requires=["requests>=2.20.0",
                       "Thingy>=0.8.3"],
     classifiers=[
         "Intended Audience :: Developers",

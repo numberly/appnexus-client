@@ -1,7 +1,4 @@
-# Get rid of requests warning:
-urllib3==1.21.1
-
-requests==2.18.1
+requests==2.20.0
 Thingy==0.8.3
 
 pytest==3.0.7
