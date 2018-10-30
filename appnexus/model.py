@@ -87,8 +87,8 @@ class AlphaModel(Model):
 
     @classmethod
     def find(cls, **kwargs):
-        raise NotImplemented("Can't get multiple objects on '{}' service"
-                             .format(cls.service_name))
+        raise NotImplementedError("Can't get multiple objects on '{}' service"
+                                  .format(cls.service_name))
 
     @classmethod
     def find_one(cls, id, **kwargs):
@@ -141,23 +141,24 @@ class Report(Model):
 
 class BudgetSplitterMixin():
 
-    @property   # flake8: noqa: F821
+    @property
     def budget_splitter(self):
-        return BudgetSplitter.find_one(id=self.id)
+        return BudgetSplitter.find_one(id=self.id)  # noqa: F821
 
 
 class ChangeLogMixin():
 
     @property
-    def changelog(self):  # flake8: noqa: F821
-        return ChangeLog.find(service=self.service_name, resource_id=self.id)
+    def changelog(self):
+        return ChangeLog.find(service=self.service_name,  # noqa: F821
+                              resource_id=self.id)
 
 
 class ProfileMixin():
 
     @property
-    def profile(self):  # flake8: noqa: F821
-        return Profile.find_one(id=self.profile_id)
+    def profile(self):
+        return Profile.find_one(id=self.profile_id)  # noqa: F821
 
 
 def create_models(services_list):
