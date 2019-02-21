@@ -48,7 +48,7 @@ Services
 
 A service is an endpoint on the AppNexus API, representing an entity such as a
 creative. Here is the complete list of services usable with AppNexus-client:
-``AccountRecovery``, ``AdProfile``, ``AdQualityRule``, ``AdServer``,
+``AccountRecovery``, ``AdProfile``, ``AdQualityRule``, ``Adserver``,
 ``Advertiser``, ``BatchSegment``, ``Brand``, ``Broker``, ``Browser``,
 ``BudgetSplitter``, ``Campaign``, ``Carrier``, ``Category``, ``ChangeLog``,
 ``ChangeLogDetail``, ``City``, ``ContentCategory``, ``Country``, ``Creative``,

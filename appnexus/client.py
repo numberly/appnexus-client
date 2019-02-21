@@ -219,7 +219,7 @@ class AppNexusClient(object):
             return self.url
 
 
-services_list = ["AccountRecovery", "AdProfile", "AdQualityRule", "AdServer",
+services_list = ["AccountRecovery", "AdProfile", "AdQualityRule", "Adserver",
                  "Advertiser", "BatchSegment", "Brand", "Broker", "Browser",
                  "BudgetSplitter", "Campaign", "Carrier", "Category",
                  "ChangeLog", "ChangeLogDetail", "City", "ContentCategory",
