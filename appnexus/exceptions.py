@@ -13,16 +13,6 @@ class AppNexusException(Exception):
         return "{}: {}".format(error_name, description_error)
 
 
-class RateExceeded(AppNexusException):
-    """Exception raised when the client reached the rate limit"""
-    pass
-
-
-class NoAuth(AppNexusException):
-    """Exception raised when the client's authentication expired"""
-    pass
-
-
 class BadCredentials(AppNexusException):
     """Exception raised when wrong credentials are provided"""
 
@@ -30,4 +20,4 @@ class BadCredentials(AppNexusException):
         return "You provided bad credentials for the AppNexus API"
 
 
-__all__ = ["AppNexusException", "RateExceeded", "NoAuth", "BadCredentials"]
+__all__ = ["AppNexusException", "BadCredentials"]
