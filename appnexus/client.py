@@ -220,8 +220,8 @@ class AppNexusClient(object):
 
 
 services_list = ["AccountRecovery", "AdProfile", "AdQualityRule", "Adserver",
-                 "Advertiser", "BatchSegment", "Brand", "Broker", "Browser",
-                 "BudgetSplitter", "Campaign", "Carrier", "Category",
+                 "Advertiser", "AugmentedLineItem", "BatchSegment", "Brand",
+                 "Broker", "Browser", "Campaign", "Carrier", "Category",
                  "ChangeLog", "ChangeLogDetail", "City", "ContentCategory",
                  "Country", "Creative", "CreativeFormat", "Currency",
                  "CustomModel", "CustomModelHash", "CustomModelLogit",

@@ -4,6 +4,7 @@ import time
 from thingy import Thingy
 
 from appnexus.client import AppNexusClient, client, services_list
+from appnexus.exceptions import AppNexusException
 from appnexus.utils import classproperty, normalize_service_name
 
 logger = logging.getLogger("appnexus-client")
@@ -139,13 +140,6 @@ class Report(Model):
         return (status == "ready")
 
 
-class BudgetSplitterMixin():
-
-    @property
-    def budget_splitter(self):
-        return BudgetSplitter.find_one(id=self.id)  # noqa: F821
-
-
 class ChangeLogMixin():
 
     @property
@@ -161,16 +155,60 @@ class ProfileMixin():
         return Profile.find_one(id=self.profile_id)  # noqa: F821
 
 
+class LineItem(Model, ChangeLogMixin, ProfileMixin):
+
+    @classmethod
+    def find(cls, **kwargs):
+        kwargs["line_item_type"] = "standard_v1"
+        return super().find(**kwargs)
+
+
+class AugmentedLineItem(Model, ChangeLogMixin, ProfileMixin):
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self._splits = []
+
+    @classmethod
+    def find(cls, **kwargs):
+        kwargs["line_item_type"] = "standard_v2"
+        return super().find(**kwargs)
+
+    @classproperty
+    def service_name(cls):
+        return "line-item"
+
+    @property
+    def splits(self):
+        if not self._splits:
+            try:
+                self._splits = self.client.get(
+                    "budget-splitter/{}/splits".format(self.id),
+                    raw=True)
+            except AppNexusException:
+                pass
+        return self._splits
+
+    @splits.setter
+    def splits(self, value):
+        self._splits = value
+
+    def save(self, **kwargs):
+        splits = self.__dict__.pop("_splits", None)
+        super().save(**kwargs)
+        if splits:
+            self.client.modify(
+                "budget-splitter/{}/splits".format(self.id),
+                splits)
+
+
 def create_models(services_list):
     for service_name in services_list:
         ancestors = [Model]
-        if service_name in ("LineItem"):
-            ancestors.append(BudgetSplitterMixin)
-        if service_name in ("Campaign", "InsertionOrder", "LineItem",
-                            "Profile"):
+        if service_name in ("Campaign", "InsertionOrder", "Profile"):
             ancestors.append(ChangeLogMixin)
         if service_name in ("AdQualityRule", "Advertiser", "Campaign",
-                            "Creative", "LineItem", "PaymentRule"):
+                            "Creative", "PaymentRule"):
             ancestors.append(ProfileMixin)
         model = type(service_name, tuple(ancestors), {})
         globals().setdefault(service_name, model)
