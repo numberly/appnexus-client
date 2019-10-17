@@ -87,12 +87,14 @@ class Cursor(object):
         return self.client.get(self.service_name, **specs)
 
     def iter_pages(self, skip_elements=0):
+        """Iterate as much as needed to get all available pages"""
         start_element = skip_elements
-        count = self.count()
-        while start_element < count:
+        count = -1
+        while start_element < count or count == -1:
             page = self.get_page(start_element)
             yield page
             start_element = page["start_element"] + page["num_elements"]
+            count = page["count"]
 
     def count(self):
         """Returns the number of elements matching the specifications"""
