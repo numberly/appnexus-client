@@ -23,7 +23,6 @@ class Cursor(object):
         self.service_name = service_name
         self.representation = representation
         self.specs = specs
-        self.retrieved = 0
         self._skip = 0
         self._limit = float('inf')
 
@@ -39,21 +38,22 @@ class Cursor(object):
 
     def __iter__(self):
         """Iterate over all AppNexus objects matching the specifications"""
+        retrieved = 0
+        skip = self._skip
         for page in self.iter_pages():
             data = self.extract_data(page)
-            if self._skip >= len(data):
-                self._skip -= len(data)
+            if skip >= len(data):
+                skip -= len(data)
                 continue
-            elif self._skip:
-                self._skip = 0
-                data = data[self._skip:]
-            lasting = self._limit - self.retrieved
+            elif skip:
+                data = data[skip:]
+            lasting = self._limit - retrieved
             if not lasting:
                 break
             elif lasting < len(data):
                 data = data[:lasting]
             for entity in data:
-                self.retrieved += 1
+                retrieved += 1
                 yield entity
 
     def extract_data(self, page):
