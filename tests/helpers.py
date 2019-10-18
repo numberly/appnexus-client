@@ -25,6 +25,7 @@ def gen_random_collection(count=None, object_type="campaigns"):
     if count is None:
         count = random.randrange(10000)
     result = []
+    i = 0
     for i in range(count // 100):
         random_page = gen_random_page(count=count, object_type=object_type,
                                       start_element=i * 100)

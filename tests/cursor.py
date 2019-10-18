@@ -159,3 +159,8 @@ def test_clone_iterate(cursor):
 def test_uncallable_representation():
     with pytest.raises(TypeError):
         Cursor("dumb", "dumb", 42)
+
+
+def test_requests_volume_on_iteration(cursor):
+    _ = [r for r in cursor]
+    assert cursor.client.get.call_count == 1
