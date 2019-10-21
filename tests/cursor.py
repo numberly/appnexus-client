@@ -4,10 +4,9 @@ from appnexus import representations
 from appnexus.client import AppNexusClient
 from appnexus.cursor import Cursor
 
-from .helpers import *
+from .helpers import gen_ordered_collection, gen_random_collection
 
-
-COLLECTION_DEFAULT_SIZE = 324
+COLLECTION_SIZE = 324
 
 
 @pytest.fixture
@@ -58,12 +57,12 @@ def response_dict2():
 
 @pytest.fixture
 def random_response_dict():
-    return gen_random_collection(count=COLLECTION_DEFAULT_SIZE)
+    return gen_random_collection(count=COLLECTION_SIZE)
 
 
 @pytest.fixture
 def ordered_response_dict():
-    return gen_ordered_collection(start_element=0, count=COLLECTION_DEFAULT_SIZE)
+    return gen_ordered_collection(start_element=0, count=COLLECTION_SIZE)
 
 
 @pytest.fixture
@@ -90,7 +89,7 @@ def ordered_cursor(mocker, ordered_response_dict):
     return Cursor(client, "campaign", representations.raw)
 
 
-def mock_ordered_cursor(mocker, start=0, count=COLLECTION_DEFAULT_SIZE, factor=1):
+def mock_ordered_cursor(mocker, start=0, count=COLLECTION_SIZE, factor=1):
     client = AppNexusClient("test", "test")
     mocker.patch.object(client, "get")
     client.get.side_effect = gen_ordered_collection(start, count) * factor
@@ -200,46 +199,47 @@ def test_requests_volume_on_iteration(cursor):
 
 
 def test_skip_none(mocker):
-    cursor = mock_ordered_cursor(mocker, start=0, count=COLLECTION_DEFAULT_SIZE)
+    cursor = mock_ordered_cursor(mocker, start=0, count=COLLECTION_SIZE)
     results = [r for r in cursor]
-    assert len(results) == COLLECTION_DEFAULT_SIZE
+    assert len(results) == COLLECTION_SIZE
     assert results[0]['id'] == 0
-    assert results[-1]['id'] == COLLECTION_DEFAULT_SIZE - 1
+    assert results[-1]['id'] == COLLECTION_SIZE - 1
     assert cursor.get_page.call_count == 4
 
 
 def test_skip_ten(mocker):
     skip = 10
-    cursor = mock_ordered_cursor(mocker, start=skip, count=COLLECTION_DEFAULT_SIZE)
+    cursor = mock_ordered_cursor(mocker, start=skip, count=COLLECTION_SIZE)
     cursor.skip(skip)
     results = [r for r in cursor]
-    assert len(results) == COLLECTION_DEFAULT_SIZE - skip
+    assert len(results) == COLLECTION_SIZE - skip
     assert results[0]['id'] == skip
-    assert results[-1]['id'] == COLLECTION_DEFAULT_SIZE - 1
+    assert results[-1]['id'] == COLLECTION_SIZE - 1
     assert cursor.get_page.call_count == 4
 
 
 def test_skip_hundred_ten(mocker):
     skip = 110
-    cursor = mock_ordered_cursor(mocker, start=skip, count=COLLECTION_DEFAULT_SIZE)
+    cursor = mock_ordered_cursor(mocker, start=skip, count=COLLECTION_SIZE)
     cursor.skip(skip)
     results = [r for r in cursor]
-    assert len(results) == COLLECTION_DEFAULT_SIZE - skip
+    assert len(results) == COLLECTION_SIZE - skip
     assert results[0]['id'] == skip
-    assert results[-1]['id'] == COLLECTION_DEFAULT_SIZE - 1
+    assert results[-1]['id'] == COLLECTION_SIZE - 1
     assert cursor.get_page.call_count == 3
 
 
 def test_skip_twice(mocker):
     skip = 10
-    cursor = mock_ordered_cursor(mocker, start=skip, count=COLLECTION_DEFAULT_SIZE, factor=2)
+    cursor = mock_ordered_cursor(mocker, start=skip, count=COLLECTION_SIZE,
+                                 factor=2)
     cursor.skip(skip)
     results = [r for r in cursor]
-    assert len(results) == COLLECTION_DEFAULT_SIZE - skip
+    assert len(results) == COLLECTION_SIZE - skip
     assert results[0]['id'] == skip
     assert cursor.get_page.call_count == 4
     results = [r for r in cursor]
-    assert len(results) == COLLECTION_DEFAULT_SIZE - skip
+    assert len(results) == COLLECTION_SIZE - skip
     assert results[0]['id'] == skip
     assert cursor.get_page.call_count == 8
 
@@ -268,12 +268,12 @@ def test_limit_hundred_ten(mocker):
 
 def test_limit_thousand(mocker):
     limit = 1000
-    cursor = mock_ordered_cursor(mocker, start=0, count=COLLECTION_DEFAULT_SIZE)
+    cursor = mock_ordered_cursor(mocker, start=0, count=COLLECTION_SIZE)
     cursor.limit(limit)
     results = [r for r in cursor]
-    assert len(results) == COLLECTION_DEFAULT_SIZE
+    assert len(results) == COLLECTION_SIZE
     assert results[0]['id'] == 0
-    assert results[-1]['id'] == COLLECTION_DEFAULT_SIZE - 1
+    assert results[-1]['id'] == COLLECTION_SIZE - 1
     assert cursor.get_page.call_count == 4
 
 
@@ -296,7 +296,7 @@ def test_limit_twice(mocker):
 def test_skip_and_limit(mocker):
     skip = 10
     limit = 150
-    cursor = mock_ordered_cursor(mocker, start=skip, count=skip+limit)
+    cursor = mock_ordered_cursor(mocker, start=skip, count=skip + limit)
     cursor.skip(skip)
     cursor.limit(limit)
     results = [r for r in cursor]
