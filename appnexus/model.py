@@ -135,7 +135,8 @@ class Report(Model):
 
     @property
     def is_ready(self):
-        status = Report.find_one(id=self.report_id).execution_status
+        status = self.client.get("report",
+                                 id=self.report_id).get("execution_status")
         return (status == "ready")
 
 
