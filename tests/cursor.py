@@ -4,7 +4,7 @@ from appnexus import representations
 from appnexus.client import AppNexusClient
 from appnexus.cursor import Cursor
 
-from .helpers import gen_ordered_collection, gen_random_collection
+from .helpers import gen_collection
 
 COLLECTION_SIZE = 324
 
@@ -57,12 +57,12 @@ def response_dict2():
 
 @pytest.fixture
 def random_response_dict():
-    return gen_random_collection(count=COLLECTION_SIZE)
+    return gen_collection(count=COLLECTION_SIZE, randomize=True)
 
 
 @pytest.fixture
 def ordered_response_dict():
-    return gen_ordered_collection(start_element=0, count=COLLECTION_SIZE)
+    return gen_collection(count=COLLECTION_SIZE, randomize=False)
 
 
 @pytest.fixture
@@ -92,7 +92,7 @@ def ordered_cursor(mocker, ordered_response_dict):
 def mock_ordered_cursor(mocker, start=0, count=COLLECTION_SIZE, factor=1):
     client = AppNexusClient("test", "test")
     mocker.patch.object(client, "get")
-    client.get.side_effect = gen_ordered_collection(start, count) * factor
+    client.get.side_effect = gen_collection(start, count) * factor
     cursor = Cursor(client, "campaign", representations.raw)
     mocker.patch.object(cursor, "get_page", wraps=cursor.get_page)
     return cursor
