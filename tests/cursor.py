@@ -78,7 +78,9 @@ def random_cursor(mocker, random_response_dict):
     client = AppNexusClient("test", "test")
     mocker.patch.object(client, "get")
     client.get.side_effect = random_response_dict
-    return Cursor(client, "campaign", representations.raw)
+    cursor = Cursor(client, "campaign", representations.raw)
+    mocker.patch.object(cursor, "get_page", wraps=cursor.get_page)
+    return cursor
 
 
 @pytest.fixture
@@ -86,7 +88,9 @@ def ordered_cursor(mocker, ordered_response_dict):
     client = AppNexusClient("test", "test")
     mocker.patch.object(client, "get")
     client.get.side_effect = ordered_response_dict
-    return Cursor(client, "campaign", representations.raw)
+    cursor = Cursor(client, "campaign", representations.raw)
+    mocker.patch.object(cursor, "get_page", wraps=cursor.get_page)
+    return cursor
 
 
 def mock_ordered_cursor(mocker, start=0, count=COLLECTION_SIZE, factor=1):
@@ -96,14 +100,6 @@ def mock_ordered_cursor(mocker, start=0, count=COLLECTION_SIZE, factor=1):
     cursor = Cursor(client, "campaign", representations.raw)
     mocker.patch.object(cursor, "get_page", wraps=cursor.get_page)
     return cursor
-
-
-@pytest.fixture
-def double_ordered_cursor(mocker, ordered_response_dict):
-    client = AppNexusClient("test", "test")
-    mocker.patch.object(client, "get")
-    client.get.side_effect = ordered_response_dict * 2
-    return Cursor(client, "campaign", representations.raw)
 
 
 def test_cursor_count(cursor, response_dict):
@@ -198,18 +194,17 @@ def test_requests_volume_on_iteration(cursor):
     assert cursor.client.get.call_count == 1
 
 
-def test_skip_none(mocker):
-    cursor = mock_ordered_cursor(mocker, start=0, count=COLLECTION_SIZE)
-    results = [r for r in cursor]
+def test_skip_none(ordered_cursor):
+    results = [r for r in ordered_cursor]
     assert len(results) == COLLECTION_SIZE
     assert results[0]['id'] == 0
     assert results[-1]['id'] == COLLECTION_SIZE - 1
-    assert cursor.get_page.call_count == 4
+    assert ordered_cursor.get_page.call_count == 4
 
 
 def test_skip_ten(mocker):
     skip = 10
-    cursor = mock_ordered_cursor(mocker, start=skip, count=COLLECTION_SIZE)
+    cursor = mock_ordered_cursor(mocker, start=skip)
     cursor.skip(skip)
     results = [r for r in cursor]
     assert len(results) == COLLECTION_SIZE - skip
@@ -220,7 +215,7 @@ def test_skip_ten(mocker):
 
 def test_skip_hundred_ten(mocker):
     skip = 110
-    cursor = mock_ordered_cursor(mocker, start=skip, count=COLLECTION_SIZE)
+    cursor = mock_ordered_cursor(mocker, start=skip)
     cursor.skip(skip)
     results = [r for r in cursor]
     assert len(results) == COLLECTION_SIZE - skip
@@ -231,8 +226,7 @@ def test_skip_hundred_ten(mocker):
 
 def test_skip_twice(mocker):
     skip = 10
-    cursor = mock_ordered_cursor(mocker, start=skip, count=COLLECTION_SIZE,
-                                 factor=2)
+    cursor = mock_ordered_cursor(mocker, start=skip, factor=2)
     cursor.skip(skip)
     results = [r for r in cursor]
     assert len(results) == COLLECTION_SIZE - skip
@@ -246,7 +240,7 @@ def test_skip_twice(mocker):
 
 def test_limit_ten(mocker):
     limit = 10
-    cursor = mock_ordered_cursor(mocker, start=0, count=limit)
+    cursor = mock_ordered_cursor(mocker, count=limit)
     cursor.limit(limit)
     results = [r for r in cursor]
     assert len(results) == limit
@@ -257,7 +251,7 @@ def test_limit_ten(mocker):
 
 def test_limit_hundred_ten(mocker):
     limit = 110
-    cursor = mock_ordered_cursor(mocker, start=0, count=limit)
+    cursor = mock_ordered_cursor(mocker, count=limit)
     cursor.limit(limit)
     results = [r for r in cursor]
     assert len(results) == limit
@@ -268,7 +262,7 @@ def test_limit_hundred_ten(mocker):
 
 def test_limit_thousand(mocker):
     limit = 1000
-    cursor = mock_ordered_cursor(mocker, start=0, count=COLLECTION_SIZE)
+    cursor = mock_ordered_cursor(mocker)
     cursor.limit(limit)
     results = [r for r in cursor]
     assert len(results) == COLLECTION_SIZE
@@ -279,7 +273,7 @@ def test_limit_thousand(mocker):
 
 def test_limit_twice(mocker):
     limit = 50
-    cursor = mock_ordered_cursor(mocker, start=0, count=limit, factor=2)
+    cursor = mock_ordered_cursor(mocker, count=limit, factor=2)
     cursor.limit(limit)
     results = [r for r in cursor]
     assert len(results) == limit
