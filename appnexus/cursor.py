@@ -38,11 +38,9 @@ class Cursor(object):
 
     def __iter__(self):
         """Iterate over all AppNexus objects matching the specifications"""
-        retrieved = 0
         for page in self.iter_pages():
             data = self.extract_data(page)
             for entity in data:
-                retrieved += 1
                 yield entity
 
     def extract_data(self, page):
