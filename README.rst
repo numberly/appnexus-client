@@ -9,8 +9,6 @@ AppNexus-client
    :target: https://pypi.python.org/pypi/appnexus-client
 .. image:: https://img.shields.io/github/license/numberly/appnexus-client.svg
    :target: https://github.com/numberly/appnexus-client/blob/master/LICENSE
-.. image:: https://img.shields.io/travis/numberly/appnexus-client/master.svg
-   :target: https://travis-ci.org/numberly/appnexus-client
 .. image:: https://img.shields.io/coveralls/numberly/appnexus-client.svg
    :target: https://coveralls.io/github/numberly/appnexus-client
 .. image:: http://readthedocs.org/projects/appnexus-client/badge
