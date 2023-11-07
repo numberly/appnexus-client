@@ -4,6 +4,7 @@ import time
 from thingy import Thingy
 
 from appnexus.client import AppNexusClient, client, services_list
+from appnexus.clone_mixin import CloneMixin, clone_services_unrequired_fields
 from appnexus.utils import classproperty, normalize_service_name
 
 logger = logging.getLogger("appnexus-client")
@@ -173,6 +174,8 @@ def create_models(services_list):
         if service_name in ("AdQualityRule", "Advertiser", "Campaign",
                             "Creative", "LineItem", "PaymentRule"):
             ancestors.append(ProfileMixin)
+        if service_name in clone_services_unrequired_fields.keys():
+            ancestors.append(CloneMixin)
         model = type(service_name, tuple(ancestors), {})
         globals().setdefault(service_name, model)
 
