@@ -6,8 +6,7 @@ import time
 import requests
 
 from appnexus.cursor import Cursor
-from appnexus.exceptions import (AppNexusException, BadCredentials, NoAuth,
-                                 RateExceeded)
+from appnexus.exceptions import AppNexusException, BadCredentials
 from appnexus.utils import normalize_service_name
 
 try:
@@ -22,8 +21,6 @@ class AppNexusClient(object):
     """Represents an active connection to the AppNexus API"""
     url = "https://api.appnexus.com/"
     test_url = "https://api-test.appnexus.com/"
-    error_codes = {"RATE_EXCEEDED": RateExceeded}
-    error_ids = {"NOAUTH": NoAuth}
 
     def __init__(self, username=None, password=None, test=False,
                  representation=None, token_file=None):
@@ -77,6 +74,7 @@ class AppNexusClient(object):
         """
         valid_response = False
         raw = kwargs.pop("raw", False)
+        custom_exception_handlers = kwargs.pop("custom_exception_handlers")
 
         while not valid_response:
             headers = dict(Authorization=self.token)
@@ -97,10 +95,9 @@ class AppNexusClient(object):
 
             try:
                 self.check_errors(response, response_data)
-            except RateExceeded:
-                self._handle_rate_exceeded(response)
-            except NoAuth:
-                self.update_token()
+            except AppNexusException as e:
+                self._exception_handler(e, response, response_data,
+                                        custom_exception_handlers)
             else:
                 valid_response = True
         if raw:
@@ -113,33 +110,32 @@ class AppNexusClient(object):
         if None in self.credentials.values():
             raise RuntimeError("You must provide an username and a password")
         credentials = dict(auth=self.credentials)
-        url = self.test_url if self.test else self.url
-        response = requests.post(url + "auth",
-                                 json=credentials)
-        data = response.json()["response"]
-        if "error_id" in data and data["error_id"] == "NOAUTH":
+        response = self.create("auth", credentials)
+        if "error_id" in response and response["error_id"] == "NOAUTH":
             raise BadCredentials()
-        if "error_code" in data and data["error_code"] == "RATE_EXCEEDED":
-            time.sleep(150)
-            return
-        if "error_code" in data or "error_id" in data:
-            raise AppNexusException(response)
-        self.token = data["token"]
+        self.token = response["token"]
         self.save_token()
         return self.token
 
     def check_errors(self, response, data):
         """Check for errors and raise an appropriate error if needed"""
         if "error_id" in data:
-            error_id = data["error_id"]
-            if error_id in self.error_ids:
-                raise self.error_ids[error_id](response)
-        if "error_code" in data:
-            error_code = data["error_code"]
-            if error_code in self.error_codes:
-                raise self.error_codes[error_code](response)
-        if "error_code" in data or "error_id" in data:
-            raise AppNexusException(response)
+            raise type(data["error_id"], (AppNexusException,), {})(response)
+
+    def _exception_handler(self, exception,
+                           response, data,
+                           custom_handler=None):
+        _default_handler = {
+            "NOAUTH": self.update_token,
+            "RATE_EXCEEDED": self._handle_rate_exceeded,
+        }
+        if custom_handler and isinstance(dict, custom_handler):
+            _default_handler.update(**custom_handler)
+        exception_name = type(exception).__name__
+        if exception_name in _default_handler:
+            _default_handler[exception_name]()
+        else:
+            raise
 
     def get(self, service_name, **kwargs):
         """Retrieve data from AppNexus API"""
