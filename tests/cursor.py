@@ -4,7 +4,9 @@ from appnexus import representations
 from appnexus.client import AppNexusClient
 from appnexus.cursor import Cursor
 
-from .helpers import gen_random_collection
+from .helpers import gen_collection
+
+COLLECTION_SIZE = 324
 
 
 @pytest.fixture
@@ -55,7 +57,12 @@ def response_dict2():
 
 @pytest.fixture
 def random_response_dict():
-    return gen_random_collection(count=324)
+    return gen_collection(count=COLLECTION_SIZE, randomize=True)
+
+
+@pytest.fixture
+def ordered_response_dict():
+    return gen_collection(count=COLLECTION_SIZE, randomize=False)
 
 
 @pytest.fixture
@@ -71,7 +78,28 @@ def random_cursor(mocker, random_response_dict):
     client = AppNexusClient("test", "test")
     mocker.patch.object(client, "get")
     client.get.side_effect = random_response_dict
-    return Cursor(client, "campaign", representations.raw)
+    cursor = Cursor(client, "campaign", representations.raw)
+    mocker.patch.object(cursor, "get_page", wraps=cursor.get_page)
+    return cursor
+
+
+@pytest.fixture
+def ordered_cursor(mocker, ordered_response_dict):
+    client = AppNexusClient("test", "test")
+    mocker.patch.object(client, "get")
+    client.get.side_effect = ordered_response_dict
+    cursor = Cursor(client, "campaign", representations.raw)
+    mocker.patch.object(cursor, "get_page", wraps=cursor.get_page)
+    return cursor
+
+
+def mock_ordered_cursor(mocker, start=0, count=COLLECTION_SIZE, factor=1):
+    client = AppNexusClient("test", "test")
+    mocker.patch.object(client, "get")
+    client.get.side_effect = gen_collection(start, count) * factor
+    cursor = Cursor(client, "campaign", representations.raw)
+    mocker.patch.object(cursor, "get_page", wraps=cursor.get_page)
+    return cursor
 
 
 def test_cursor_count(cursor, response_dict):
@@ -164,3 +192,109 @@ def test_uncallable_representation():
 def test_requests_volume_on_iteration(cursor):
     _ = [r for r in cursor]
     assert cursor.client.get.call_count == 1
+
+
+def test_skip_none(ordered_cursor):
+    results = [r for r in ordered_cursor]
+    assert len(results) == COLLECTION_SIZE
+    assert results[0]['id'] == 0
+    assert results[-1]['id'] == COLLECTION_SIZE - 1
+    assert ordered_cursor.get_page.call_count == 4
+
+
+def test_skip_ten(mocker):
+    skip = 10
+    cursor = mock_ordered_cursor(mocker, start=skip)
+    cursor.skip(skip)
+    results = [r for r in cursor]
+    assert len(results) == COLLECTION_SIZE - skip
+    assert results[0]['id'] == skip
+    assert results[-1]['id'] == COLLECTION_SIZE - 1
+    assert cursor.get_page.call_count == 4
+
+
+def test_skip_hundred_ten(mocker):
+    skip = 110
+    cursor = mock_ordered_cursor(mocker, start=skip)
+    cursor.skip(skip)
+    results = [r for r in cursor]
+    assert len(results) == COLLECTION_SIZE - skip
+    assert results[0]['id'] == skip
+    assert results[-1]['id'] == COLLECTION_SIZE - 1
+    assert cursor.get_page.call_count == 3
+
+
+def test_skip_twice(mocker):
+    skip = 10
+    cursor = mock_ordered_cursor(mocker, start=skip, factor=2)
+    cursor.skip(skip)
+    results = [r for r in cursor]
+    assert len(results) == COLLECTION_SIZE - skip
+    assert results[0]['id'] == skip
+    assert cursor.get_page.call_count == 4
+    results = [r for r in cursor]
+    assert len(results) == COLLECTION_SIZE - skip
+    assert results[0]['id'] == skip
+    assert cursor.get_page.call_count == 8
+
+
+def test_limit_ten(mocker):
+    limit = 10
+    cursor = mock_ordered_cursor(mocker, count=limit)
+    cursor.limit(limit)
+    results = [r for r in cursor]
+    assert len(results) == limit
+    assert results[0]['id'] == 0
+    assert results[-1]['id'] == limit - 1
+    assert cursor.get_page.call_count == 1
+
+
+def test_limit_hundred_ten(mocker):
+    limit = 110
+    cursor = mock_ordered_cursor(mocker, count=limit)
+    cursor.limit(limit)
+    results = [r for r in cursor]
+    assert len(results) == limit
+    assert results[0]['id'] == 0
+    assert results[-1]['id'] == limit - 1
+    assert cursor.get_page.call_count == 2
+
+
+def test_limit_thousand(mocker):
+    limit = 1000
+    cursor = mock_ordered_cursor(mocker)
+    cursor.limit(limit)
+    results = [r for r in cursor]
+    assert len(results) == COLLECTION_SIZE
+    assert results[0]['id'] == 0
+    assert results[-1]['id'] == COLLECTION_SIZE - 1
+    assert cursor.get_page.call_count == 4
+
+
+def test_limit_twice(mocker):
+    limit = 50
+    cursor = mock_ordered_cursor(mocker, count=limit, factor=2)
+    cursor.limit(limit)
+    results = [r for r in cursor]
+    assert len(results) == limit
+    assert results[0]['id'] == 0
+    assert results[-1]['id'] == limit - 1
+    assert cursor.get_page.call_count == 1
+    results = [r for r in cursor]
+    assert len(results) == limit
+    assert results[0]['id'] == 0
+    assert results[-1]['id'] == limit - 1
+    assert cursor.get_page.call_count == 2
+
+
+def test_skip_and_limit(mocker):
+    skip = 10
+    limit = 150
+    cursor = mock_ordered_cursor(mocker, start=skip, count=skip + limit)
+    cursor.skip(skip)
+    cursor.limit(limit)
+    results = [r for r in cursor]
+    assert len(results) == limit
+    assert results[0]['id'] == skip
+    assert results[-1]['id'] == limit + skip - 1
+    assert cursor.get_page.call_count == 2

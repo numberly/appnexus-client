@@ -23,7 +23,6 @@ class Cursor(object):
         self.service_name = service_name
         self.representation = representation
         self.specs = specs
-        self.retrieved = 0
         self._skip = 0
         self._limit = float('inf')
 
@@ -41,19 +40,7 @@ class Cursor(object):
         """Iterate over all AppNexus objects matching the specifications"""
         for page in self.iter_pages():
             data = self.extract_data(page)
-            if self._skip >= len(data):
-                self._skip -= len(data)
-                continue
-            elif self._skip:
-                self._skip = 0
-                data = data[self._skip:]
-            lasting = self._limit - self.retrieved
-            if not lasting:
-                break
-            elif lasting < len(data):
-                data = data[:lasting]
             for entity in data:
-                self.retrieved += 1
                 yield entity
 
     def extract_data(self, page):
@@ -86,15 +73,17 @@ class Cursor(object):
         specs.update(start_element=start_element, num_elements=num_elements)
         return self.client.get(self.service_name, **specs)
 
-    def iter_pages(self, skip_elements=0):
+    def iter_pages(self):
         """Iterate as much as needed to get all available pages"""
-        start_element = skip_elements
+        start_element = self._skip
+        num_elements = min(self._limit, self.batch_size)
         count = -1
         while start_element < count or count == -1:
-            page = self.get_page(start_element)
+            page = self.get_page(start_element, num_elements)
             yield page
-            start_element = page["start_element"] + page["num_elements"]
-            count = page["count"]
+            start_element = start_element + page["num_elements"]
+            num_elements = min(page["count"] - num_elements, self.batch_size)
+            count = min(page["count"], self._skip + self._limit)
 
     def count(self):
         """Returns the number of elements matching the specifications"""
